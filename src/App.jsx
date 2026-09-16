@@ -93,28 +93,103 @@ function Arrow() {
 }
 
 function FlyingBot() {
-  function talkToAjudon() {
-    const message =
-      "Olá! Vi o robozinho no site da Ajudon e gostaria de atendimento.";
+  const [isOpen, setIsOpen] = useState(false);
+  const [messages, setMessages] = useState([
+    {
+      from: "bot",
+      text: "Olá! Sou o assistente virtual da Ajudon. Posso ajudar você a encontrar uma solução ou encaminhar seu atendimento.",
+    },
+  ]);
 
-    window.open(
-      `${whatsappUrl}?text=${encodeURIComponent(message)}`,
-      "_blank",
-      "noopener,noreferrer"
-    );
+  const suggestions = [
+    "Quero abrir uma empresa",
+    "Contabilidade para tecnologia",
+    "Conhecer a Ajudon Express",
+    "Falar com a equipe",
+  ];
+
+  function sendMessage(text) {
+    const question = text.trim();
+    if (!question) return;
+
+    setMessages((current) => [...current, { from: "user", text: question }]);
+    const normalized = question.toLowerCase();
+    let answer = "Posso orientar você sobre os serviços da Ajudon. Se preferir, posso encaminhar sua conversa para a equipe pelo WhatsApp.";
+
+    if (/(abrir|abertura|criar|formalizar|começar).*(empresa|negócio)|(empresa|negócio).*(abrir|abertura)/.test(normalized)) {
+      answer = "A Ajudon pode orientar sobre a abertura e formalização da empresa. Para entender seu caso e os documentos necessários, fale com a equipe pelo WhatsApp.";
+    } else if (/(tecnologia|desenvolvedor|designer|programador|ti)/.test(normalized)) {
+      answer = "A Ajudon oferece apoio contábil para profissionais e empresas de tecnologia, incluindo orientação para a rotina contábil e fiscal. Quer conversar com a equipe sobre sua atividade?";
+    } else if (/(express|pontual|certidão|certidao|regularização|regularizacao|alteração|alteracao|encerramento)/.test(normalized)) {
+      answer = "A Ajudon Express reúne serviços por demanda, como abertura, alteração e encerramento de empresas, regularização cadastral e emissão de certidões. A equipe confirma disponibilidade, documentos e valores.";
+    } else if (/(preço|preco|valor|quanto custa|orçamento|orcamento)/.test(normalized)) {
+      answer = "Os valores dependem do serviço e da necessidade da empresa. Posso encaminhar você ao WhatsApp para consultar a equipe.";
+    } else if (/(e-mail|email|equipe|humano|atendente|whatsapp|falar|contato)/.test(normalized)) {
+      answer = "Claro! Use o botão abaixo para continuar seu atendimento com a equipe da Ajudon pelo WhatsApp.";
+    } else if (/(serviço|servicos|soluções|solucoes|contabilidade|tributário|tributario|nota fiscal)/.test(normalized)) {
+      answer = "A Ajudon oferece contabilidade para tecnologia, abertura de empresa, gestão contábil, planejamento tributário, emissão de notas fiscais e serviços Ajudon Express. Qual deles você quer conhecer?";
+    }
+
+    window.setTimeout(() => {
+      setMessages((current) => [...current, { from: "bot", text: answer }]);
+    }, 250);
+  }
+
+  function openWhatsApp() {
+    const message = "Olá! Estou no site da Ajudon e gostaria de continuar meu atendimento com a equipe.";
+    window.open(`${whatsappUrl}?text=${encodeURIComponent(message)}`, "_blank", "noopener,noreferrer");
+  }
+
+  function handleSubmit(event) {
+    event.preventDefault();
+    const input = event.currentTarget.elements.message;
+    sendMessage(input.value);
+    input.value = "";
   }
 
   return (
-    <button
-      type="button"
-      className="flying-bot"
-      onClick={talkToAjudon}
-      aria-label="Falar com a Ajudon pelo WhatsApp"
-      title="Clique para falar com a Ajudon"
-    >
-      <img src="/bot-ajudon.png" alt="" />
-      <span className="bot-message">Precisa de ajuda?</span>
-    </button>
+    <div className="ajudon-assistant">
+      {isOpen && (
+        <section className="assistant-panel" aria-label="Assistente virtual da Ajudon">
+          <header className="assistant-header">
+            <div className="assistant-avatar" aria-hidden="true">a.</div>
+            <div className="assistant-heading">
+              <strong>Assistente Ajudon</strong>
+              <span><i /> Posso ajudar você</span>
+            </div>
+            <button className="assistant-close" type="button" onClick={() => setIsOpen(false)} aria-label="Fechar assistente">×</button>
+          </header>
+          <div className="assistant-messages" aria-live="polite">
+            {messages.map((message, index) => (
+              <div className={`assistant-message ${message.from}`} key={`${index}-${message.from}`}>
+                {message.text}
+              </div>
+            ))}
+            <div className="assistant-actions">
+              {suggestions.map((suggestion) => (
+                <button type="button" key={suggestion} onClick={() => sendMessage(suggestion)}>{suggestion}</button>
+              ))}
+            </div>
+          </div>
+          <form className="assistant-compose" onSubmit={handleSubmit}>
+            <input name="message" aria-label="Digite sua dúvida" placeholder="Digite sua dúvida..." autoComplete="off" />
+            <button type="submit" aria-label="Enviar mensagem">↑</button>
+          </form>
+          <button className="assistant-whatsapp" type="button" onClick={openWhatsApp}>Continuar no WhatsApp <Arrow /></button>
+        </section>
+      )}
+      <button
+        type="button"
+        className={`flying-bot ${isOpen ? "is-open" : ""}`}
+        onClick={() => setIsOpen((open) => !open)}
+        aria-label={isOpen ? "Fechar assistente Ajudon" : "Abrir assistente Ajudon"}
+        aria-expanded={isOpen}
+        title="Posso ajudar?"
+      >
+        <img src="/bot-ajudon.png" alt="" />
+        {!isOpen && <span className="bot-message">Posso ajudar?</span>}
+      </button>
+    </div>
   );
 }
 
@@ -228,21 +303,20 @@ function App() {
       </header>
 
       <FlyingBot />
-
       <a
         className="whatsapp-float"
-        href={`${whatsappUrl}?text=${encodeURIComponent(
-          "Olá! Acessei o site da Ajudon e gostaria de atendimento."
-        )}`}
+        href={`${whatsappUrl}?text=${encodeURIComponent("Olá! Vim pelo site da Ajudon e gostaria de atendimento.")}`}
         target="_blank"
         rel="noreferrer"
         aria-label="Falar com a Ajudon pelo WhatsApp"
-        title="Fale com a Ajudon pelo WhatsApp"
+        title="Falar com a Ajudon pelo WhatsApp"
       >
-        <svg viewBox="0 0 32 32" aria-hidden="true">
-          <path d="M16 3.2A12.5 12.5 0 0 0 5.2 22.1L3.5 28.5l6.6-1.7A12.5 12.5 0 1 0 16 3.2Zm0 22.6a10 10 0 0 1-5.1-1.4l-.4-.2-3.9 1 1-3.8-.3-.4A10.1 10.1 0 1 1 16 25.8Zm5.5-7.6c-.3-.2-1.8-.9-2.1-1s-.5-.2-.7.2-.8 1-1 1.2-.4.2-.7.1a8.2 8.2 0 0 1-2.4-1.5 9.1 9.1 0 0 1-1.7-2.1c-.2-.3 0-.5.1-.6l.5-.6c.2-.2.2-.4.3-.6s0-.4 0-.6-.7-1.7-1-2.3c-.2-.6-.5-.5-.7-.5h-.6c-.2 0-.6.1-.9.4s-1.2 1.2-1.2 2.8 1.2 3.2 1.4 3.4 2.4 3.7 5.8 5.1c.8.3 1.4.5 1.9.6.8.2 1.5.2 2.1.1.7-.1 1.8-.7 2-1.4.3-.7.3-1.3.2-1.4s-.3-.2-.6-.4Z" />
+        <svg viewBox="0 0 32 32" aria-hidden="true" focusable="false">
+          <path d="M16 3.2A12.6 12.6 0 0 0 5.2 22.3L3.5 28.8l6.7-1.7A12.6 12.6 0 1 0 16 3.2Zm0 22.9a10.2 10.2 0 0 1-5.2-1.4l-.4-.2-3.9 1 1-3.8-.3-.4A10.2 10.2 0 1 1 16 26.1Zm5.6-7.6c-.3-.2-1.9-.9-2.2-1s-.5-.2-.7.2-.8 1-1 1.2-.4.2-.7.1a8.3 8.3 0 0 1-2.5-1.5 9.3 9.3 0 0 1-1.7-2.1c-.2-.3 0-.5.1-.7l.5-.5.3-.5c.1-.2 0-.4 0-.6s-.7-1.8-1-2.5c-.2-.6-.5-.5-.7-.5h-.6c-.2 0-.6.1-.9.4s-1.2 1.2-1.2 2.8 1.2 3.2 1.4 3.4a13.1 13.1 0 0 0 5 4.4c.7.3 1.2.5 1.6.6.7.2 1.3.2 1.8.1.6-.1 1.9-.8 2.2-1.5s.3-1.3.2-1.5-.2-.3-.5-.4Z" />
         </svg>
       </a>
+
+
 
       <main>
         <section className="contact-section" id="contato">
@@ -266,20 +340,6 @@ function App() {
                   <span>
                     <small>E-mail</small>
                     {emailAddress}
-                  </span>
-                </a>
-
-                <a
-                  href={`${whatsappUrl}?text=${encodeURIComponent(
-                    "Olá! Gostaria de falar com a equipe da Ajudon."
-                  )}`}
-                  target="_blank"
-                  rel="noreferrer"
-                >
-                  <span className="contact-detail-icon">↗</span>
-                  <span>
-                    <small>WhatsApp</small>
-                    +55 11 94275-4326
                   </span>
                 </a>
 
@@ -673,7 +733,7 @@ function App() {
         </section>
       </main>
 
-      <footer className="site-footer">
+            <footer className="site-footer">
         <div className="container footer-main">
           <a className="brand footer-brand" href="#inicio">
             ajudon<span>.</span>
@@ -681,22 +741,41 @@ function App() {
 
           <p>Contabilidade digital com atendimento próximo.</p>
 
+          <div className="footer-contact">
+            <button
+              type="button"
+              className="button button-primary"
+              onClick={handleContactClick}
+            >
+              Falar com a Ajudon <Arrow />
+            </button>
+
+            <a
+              className="button button-secondary footer-instagram"
+              href={instagramUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="Visitar o Instagram da Ajudon"
+            >
+              <span aria-hidden="true">◎</span>
+              Instagram <Arrow />
+            </a>
+
+            <a
+              className="button button-secondary footer-email"
+              href={`mailto:${emailAddress}`}
+            >
+              <span aria-hidden="true">✉</span>
+              E-mail <Arrow />
+            </a>
+          </div>
+
           <div className="footer-links">
             <a href="#solucoes">Soluções</a>
             <a href="#express">Ajudon Express</a>
             <a href="#sobre">Sobre</a>
             <a href="#contato">Contato</a>
           </div>
-        </div>
-
-        <div className="container footer-contact">
-          <button
-            type="button"
-            className="button button-primary"
-            onClick={handleContactClick}
-          >
-            Falar com a Ajudon <Arrow />
-          </button>
         </div>
 
         <div className="container footer-bottom">
