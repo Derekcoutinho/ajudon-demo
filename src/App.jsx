@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import "./App.css";
 
 const whatsappNumber = "5511942754326";
@@ -9,95 +9,221 @@ const emailAddress = "atendimento@ajudon.com.br";
 
 const services = [
   {
-    number: "01",
-    icon: "⌘",
+    icon: "01",
     title: "Contabilidade para tecnologia",
-    description:
-      "Apoio contábil para desenvolvedores, designers e profissionais de tecnologia que trabalham por conta própria ou para empresas.",
+    text: "Uma rotina contábil pensada para profissionais, startups e empresas que vivem de tecnologia.",
   },
   {
-    number: "02",
-    icon: "↗",
+    icon: "02",
     title: "Abertura de empresa",
-    description:
-      "Orientação para formalizar seu negócio e entender os próximos passos para começar a empreender.",
+    text: "Da ideia à formalização, com orientação para você começar com mais clareza.",
   },
   {
-    number: "03",
-    icon: "▤",
+    icon: "03",
     title: "Gestão contábil",
-    description:
-      "Suporte para manter as obrigações fiscais e contábeis da empresa organizadas ao longo do ano.",
+    text: "Acompanhamento para manter a empresa organizada e suas obrigações em dia.",
   },
   {
-    number: "04",
-    icon: "＋",
+    icon: "04",
     title: "Planejamento tributário",
-    description:
-      "Análise do enquadramento e das possibilidades tributárias para buscar uma gestão mais eficiente.",
+    text: "Análise do cenário tributário para apoiar decisões mais conscientes para o negócio.",
   },
   {
-    number: "05",
-    icon: "▧",
+    icon: "05",
     title: "Emissão de notas fiscais",
-    description:
-      "Orientação para emitir notas fiscais e compreender os processos envolvidos na rotina da empresa.",
+    text: "Orientação para a emissão e rotina fiscal da sua empresa, sem complicação.",
   },
   {
-    number: "06",
-    icon: "✓",
+    icon: "06",
     title: "Ajudon Express",
-    description:
-      "Serviços pontuais, como abertura, alteração, encerramento, regularização e emissão de certidões.",
+    text: "Serviços pontuais para resolver uma demanda específica sem contratar mensalidade.",
   },
 ];
 
 const expressServices = [
-  "Abertura, alteração e encerramento de empresas",
+  "Abertura, alteração e encerramento",
   "Regularização cadastral",
   "Emissão de certidões",
   "Inscrição estadual",
   "Consultas e pesquisas cadastrais",
-  "Serviços por demanda, sem mensalidade contábil",
+  "Serviços por demanda",
 ];
 
 const faqs = [
-  {
-    question: "A Ajudon atende somente profissionais de tecnologia?",
-    answer:
-      "A Ajudon tem foco em profissionais e empresas de tecnologia. Também oferece serviços para micro e pequenas empresas e prestadores de serviços. Consulte a equipe para confirmar se sua atividade pode ser atendida.",
-  },
-  {
-    question: "Posso contratar apenas um serviço?",
-    answer:
-      "Sim. A Ajudon Express reúne serviços pontuais, sem necessidade de contratar uma mensalidade contábil. A equipe pode confirmar a disponibilidade e os detalhes do serviço desejado.",
-  },
-  {
-    question: "O atendimento é online?",
-    answer:
-      "A proposta da Ajudon é oferecer atendimento digital, com suporte humano. Entre em contato para entender como funciona o atendimento para o seu caso.",
-  },
-  {
-    question: "A Ajudon atende empresas de outros estados?",
-    answer:
-      "A disponibilidade pode variar conforme o estado e o serviço. Entre em contato para confirmar se a equipe consegue atender sua empresa.",
-  },
+  [
+    "A Ajudon atende somente tecnologia?",
+    "A Ajudon tem foco em profissionais e empresas de tecnologia, mas também atende micro e pequenas empresas e prestadores de serviços. Fale com a equipe para confirmar o seu caso.",
+  ],
+  [
+    "Posso contratar apenas um serviço?",
+    "Sim. A Ajudon Express foi pensada para demandas pontuais, sem necessidade de contratar uma mensalidade contábil.",
+  ],
+  [
+    "O atendimento é online?",
+    "A proposta é oferecer uma experiência digital com atendimento humano. A equipe orienta você de acordo com a necessidade.",
+  ],
+  [
+    "A Ajudon atende empresas de outros estados?",
+    "A disponibilidade varia conforme o estado e o serviço. Entre em contato para confirmar o atendimento.",
+  ],
 ];
 
-function Arrow() {
+function Arrow({ light = false }) {
   return (
-    <span aria-hidden="true" className="arrow">
+    <span className={light ? "arrow arrow-light" : "arrow"}>
       ↗
     </span>
   );
 }
 
+function Spark() {
+  return (
+    <span className="spark-symbol" aria-hidden="true">
+      ✦
+    </span>
+  );
+}
+
+function WhatsAppIcon() {
+  return (
+    <svg
+      viewBox="0 0 32 32"
+      aria-hidden="true"
+      className="whatsapp-icon"
+    >
+      <path d="M16 3.2A12.6 12.6 0 0 0 5.2 22.3L3.5 28.8l6.7-1.7A12.6 12.6 0 1 0 16 3.2Zm0 22.9a10.2 10.2 0 0 1-5.2-1.4l-.4-.2-3.9 1 1-3.8-.3-.4A10.2 10.2 0 1 1 16 26.1Zm5.6-7.6c-.3-.2-1.9-.9-2.2-1s-.5-.2-.7.2-.8 1-1 1.2-.4.2-.7.1a8.3 8.3 0 0 1-2.5-1.5 9.3 9.3 0 0 1-1.7-2.1c-.2-.3 0-.5.1-.7l.5-.5.3-.5c.1-.2 0-.4 0-.6s-.7-1.8-1-2.5c-.2-.6-.5-.5-.7-.5h-.6c-.2 0-.6.1-.9.4s-1.2 1.2-1.2 2.8 1.2 3.2 1.4 3.4a13.1 13.1 0 0 0 5 4.4c.7.3 1.2.5 1.6.6.7.2 1.3.2 1.8.1.6-.1 1.9-.8 2.2-1.5s.3-1.3.2-1.5-.2-.3-.5-.4Z" />
+    </svg>
+  );
+}
+
+function ShareIcon() {
+  return (
+    <svg
+      viewBox="0 0 24 24"
+      aria-hidden="true"
+      className="share-icon-svg"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.8"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
+      <path d="M12 15V4" />
+      <path d="m7.5 8.5 4.5-4.5 4.5 4.5" />
+      <path d="M5 12.5v5A2.5 2.5 0 0 0 7.5 20h9a2.5 2.5 0 0 0 2.5-2.5v-5" />
+    </svg>
+  );
+}
+
+function HeroDashboard() {
+  return (
+    <div
+      className="hero-dashboard"
+      aria-label="Painel visual da Ajudon"
+    >
+      <div className="dashboard-glow" />
+      <div className="dashboard-orbit orbit-one" />
+      <div className="dashboard-orbit orbit-two" />
+
+      <div className="dashboard-topbar">
+        <div className="window-dots">
+          <i />
+          <i />
+          <i />
+        </div>
+
+        <span>ajudon.</span>
+
+        <div className="topbar-status">
+          <b />
+          online
+        </div>
+      </div>
+
+      <div className="dashboard-main">
+        <div className="dashboard-copy">
+          <span className="mini-label">
+            CONTABILIDADE DIGITAL
+          </span>
+
+          <h2>
+            Accounting that
+            <br />
+            <em>moves with you.</em>
+          </h2>
+
+          <p>
+            Organização, orientação e tecnologia para deixar sua
+            empresa em movimento.
+          </p>
+        </div>
+
+        <div className="dashboard-metrics">
+          <div className="metric-card metric-large">
+            <div className="metric-head">
+              <span>Rotina fiscal</span>
+              <b>●</b>
+            </div>
+
+            <div className="metric-value">
+              Organizada
+            </div>
+
+            <div className="metric-bars">
+              <i />
+              <i />
+              <i />
+              <i />
+              <i />
+            </div>
+
+            <small>
+              mais clareza para decidir
+            </small>
+          </div>
+
+          <div className="metric-card metric-side">
+            <span>Atendimento</span>
+
+            <strong>Humano</strong>
+
+            <div className="avatar-row">
+              <b>a.</b>
+              <b>+</b>
+              <b>→</b>
+            </div>
+          </div>
+
+          <div className="metric-card metric-side">
+            <span>Soluções</span>
+
+            <strong>Digitais</strong>
+
+            <div className="ring">
+              <span>24/7</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div className="dashboard-footer">
+        <span>MAIS TEMPO PARA O QUE IMPORTA</span>
+
+        <span>
+          <i /> AJUDON
+        </span>
+      </div>
+    </div>
+  );
+}
+
 function FlyingBot() {
   const [isOpen, setIsOpen] = useState(false);
+
   const [messages, setMessages] = useState([
     {
       from: "bot",
-      text: "Olá! Sou o assistente virtual da Ajudon. Posso ajudar você a encontrar uma solução ou encaminhar seu atendimento.",
+      text: "Olá! Sou o assistente da Ajudon. O que você está procurando?",
     },
   ]);
 
@@ -110,91 +236,341 @@ function FlyingBot() {
 
   function sendMessage(text) {
     const question = text.trim();
+
     if (!question) return;
 
-    setMessages((current) => [...current, { from: "user", text: question }]);
-    const normalized = question.toLowerCase();
-    let answer = "Posso orientar você sobre os serviços da Ajudon. Se preferir, posso encaminhar sua conversa para a equipe pelo WhatsApp.";
+    setMessages((current) => [
+      ...current,
+      {
+        from: "user",
+        text: question,
+      },
+    ]);
 
-    if (/(abrir|abertura|criar|formalizar|começar).*(empresa|negócio)|(empresa|negócio).*(abrir|abertura)/.test(normalized)) {
-      answer = "A Ajudon pode orientar sobre a abertura e formalização da empresa. Para entender seu caso e os documentos necessários, fale com a equipe pelo WhatsApp.";
-    } else if (/(tecnologia|desenvolvedor|designer|programador|ti)/.test(normalized)) {
-      answer = "A Ajudon oferece apoio contábil para profissionais e empresas de tecnologia, incluindo orientação para a rotina contábil e fiscal. Quer conversar com a equipe sobre sua atividade?";
-    } else if (/(express|pontual|certidão|certidao|regularização|regularizacao|alteração|alteracao|encerramento)/.test(normalized)) {
-      answer = "A Ajudon Express reúne serviços por demanda, como abertura, alteração e encerramento de empresas, regularização cadastral e emissão de certidões. A equipe confirma disponibilidade, documentos e valores.";
-    } else if (/(preço|preco|valor|quanto custa|orçamento|orcamento)/.test(normalized)) {
-      answer = "Os valores dependem do serviço e da necessidade da empresa. Posso encaminhar você ao WhatsApp para consultar a equipe.";
-    } else if (/(e-mail|email|equipe|humano|atendente|whatsapp|falar|contato)/.test(normalized)) {
-      answer = "Claro! Use o botão abaixo para continuar seu atendimento com a equipe da Ajudon pelo WhatsApp.";
-    } else if (/(serviço|servicos|soluções|solucoes|contabilidade|tributário|tributario|nota fiscal)/.test(normalized)) {
-      answer = "A Ajudon oferece contabilidade para tecnologia, abertura de empresa, gestão contábil, planejamento tributário, emissão de notas fiscais e serviços Ajudon Express. Qual deles você quer conhecer?";
+    const normalized = question.toLowerCase();
+
+    let answer =
+      "Posso orientar sobre as soluções da Ajudon ou encaminhar você para a equipe pelo WhatsApp.";
+
+    if (
+      /(abrir|abertura|criar|formalizar).*(empresa|negócio)|(empresa|negócio).*(abrir|abertura)/.test(
+        normalized
+      )
+    ) {
+      answer =
+        "A Ajudon pode orientar a abertura e formalização da empresa. Para entender documentos e etapas, continue pelo WhatsApp.";
+    } else if (
+      /(tecnologia|desenvolvedor|designer|programador|ti)/.test(
+        normalized
+      )
+    ) {
+      answer =
+        "A Ajudon oferece apoio contábil para profissionais e empresas de tecnologia, com orientação para a rotina contábil e fiscal.";
+    } else if (
+      /(express|pontual|certidão|certidao|regularização|regularizacao|alteração|alteracao|encerramento)/.test(
+        normalized
+      )
+    ) {
+      answer =
+        "A Ajudon Express reúne serviços por demanda, como abertura, alteração, encerramento, regularização e certidões.";
+    } else if (
+      /(preço|preco|valor|quanto custa|orçamento|orcamento)/.test(
+        normalized
+      )
+    ) {
+      answer =
+        "Os valores dependem do serviço e da necessidade. Posso encaminhar você para consultar a equipe.";
+    } else if (
+      /(contato|whatsapp|falar|humano|equipe)/.test(
+        normalized
+      )
+    ) {
+      answer =
+        "Claro. Use o botão abaixo para continuar o atendimento com a equipe da Ajudon pelo WhatsApp.";
     }
 
     window.setTimeout(() => {
-      setMessages((current) => [...current, { from: "bot", text: answer }]);
-    }, 250);
+      setMessages((current) => [
+        ...current,
+        {
+          from: "bot",
+          text: answer,
+        },
+      ]);
+    }, 220);
   }
 
   function openWhatsApp() {
-    const message = "Olá! Estou no site da Ajudon e gostaria de continuar meu atendimento com a equipe.";
-    window.open(`${whatsappUrl}?text=${encodeURIComponent(message)}`, "_blank", "noopener,noreferrer");
+    const message =
+      "Olá! Estou no site da Ajudon e gostaria de continuar meu atendimento com a equipe.";
+
+    window.open(
+      `${whatsappUrl}?text=${encodeURIComponent(message)}`,
+      "_blank",
+      "noopener,noreferrer"
+    );
   }
 
   function handleSubmit(event) {
     event.preventDefault();
+
     const input = event.currentTarget.elements.message;
+
     sendMessage(input.value);
+
     input.value = "";
   }
 
   return (
-    <div className="ajudon-assistant">
+    <div className="assistant-wrap">
       {isOpen && (
-        <section className="assistant-panel" aria-label="Assistente virtual da Ajudon">
+        <section
+          className="assistant-panel"
+          aria-label="Assistente virtual da Ajudon"
+        >
           <header className="assistant-header">
-            <div className="assistant-avatar" aria-hidden="true">a.</div>
+            <div className="assistant-avatar">
+              a.
+            </div>
+
             <div className="assistant-heading">
               <strong>Assistente Ajudon</strong>
-              <span><i /> Posso ajudar você</span>
+
+              <span>
+                <i /> online
+              </span>
             </div>
-            <button className="assistant-close" type="button" onClick={() => setIsOpen(false)} aria-label="Fechar assistente">×</button>
+
+            <button
+              type="button"
+              onClick={() => setIsOpen(false)}
+              aria-label="Fechar"
+            >
+              ×
+            </button>
           </header>
-          <div className="assistant-messages" aria-live="polite">
+
+          <div
+            className="assistant-messages"
+            aria-live="polite"
+          >
             {messages.map((message, index) => (
-              <div className={`assistant-message ${message.from}`} key={`${index}-${message.from}`}>
+              <div
+                className={`assistant-message ${message.from}`}
+                key={`${index}-${message.from}`}
+              >
                 {message.text}
               </div>
             ))}
+
             <div className="assistant-actions">
               {suggestions.map((suggestion) => (
-                <button type="button" key={suggestion} onClick={() => sendMessage(suggestion)}>{suggestion}</button>
+                <button
+                  type="button"
+                  key={suggestion}
+                  onClick={() => sendMessage(suggestion)}
+                >
+                  {suggestion}
+                </button>
               ))}
             </div>
           </div>
-          <form className="assistant-compose" onSubmit={handleSubmit}>
-            <input name="message" aria-label="Digite sua dúvida" placeholder="Digite sua dúvida..." autoComplete="off" />
-            <button type="submit" aria-label="Enviar mensagem">↑</button>
+
+          <form
+            className="assistant-compose"
+            onSubmit={handleSubmit}
+          >
+            <input
+              name="message"
+              placeholder="Digite sua dúvida..."
+              autoComplete="off"
+              aria-label="Digite sua dúvida"
+            />
+
+            <button
+              type="submit"
+              aria-label="Enviar"
+            >
+              ↑
+            </button>
           </form>
-          <button className="assistant-whatsapp" type="button" onClick={openWhatsApp}>Continuar no WhatsApp <Arrow /></button>
+
+          <button
+            className="assistant-whatsapp"
+            type="button"
+            onClick={openWhatsApp}
+          >
+            Continuar no WhatsApp
+            <Arrow />
+          </button>
         </section>
       )}
+
       <button
+        className={`flying-bot ${
+          isOpen ? "is-open" : ""
+        }`}
         type="button"
-        className={`flying-bot ${isOpen ? "is-open" : ""}`}
-        onClick={() => setIsOpen((open) => !open)}
-        aria-label={isOpen ? "Fechar assistente Ajudon" : "Abrir assistente Ajudon"}
+        onClick={() => setIsOpen((value) => !value)}
         aria-expanded={isOpen}
-        title="Posso ajudar?"
+        aria-label="Abrir assistente Ajudon"
       >
-        <img src="/bot-ajudon.png" alt="" />
-        {!isOpen && <span className="bot-message">Posso ajudar?</span>}
+        <img
+          src="/bot-ajudon.png"
+          alt=""
+        />
+
+        {!isOpen && (
+          <span>
+            Posso ajudar?
+          </span>
+        )}
       </button>
     </div>
   );
 }
+function WelcomeModal({ onClose }) {
+  return (
+    <div
+      className="welcome-overlay"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="welcome-title"
+      onMouseDown={(event) => {
+        if (event.target === event.currentTarget) {
+          onClose();
+        }
+      }}
+    >
+      <section className="welcome-modal">
 
+        <button
+          className="welcome-close"
+          type="button"
+          onClick={onClose}
+          aria-label="Fechar anúncio"
+        >
+          ×
+        </button>
+
+        <div className="welcome-content">
+
+          <div className="welcome-kicker">
+            <span className="live-dot" />
+            AJUDON
+          </div>
+
+          <span className="welcome-badge">
+            CONTABILIDADE · TECNOLOGIA · PESSOAS
+          </span>
+
+          <h2 id="welcome-title">
+            Conheça uma contabilidade
+            <br />
+            <span>que acompanha seu ritmo.</span>
+          </h2>
+
+          <p>
+            Soluções contábeis, tecnologia e atendimento humano
+            para deixar sua empresa mais organizada e em movimento.
+          </p>
+
+          <div className="welcome-actions">
+
+            <a
+              className="button button-primary"
+              href="#solucoes"
+              onClick={onClose}
+            >
+              Conhecer trabalhos
+              <Arrow />
+            </a>
+
+            <a
+              className="button button-ghost"
+              href="#sobre"
+              onClick={onClose}
+            >
+              Conhecer o site
+            </a>
+
+          </div>
+
+          <a
+            className="welcome-contact"
+            href="#contato"
+            onClick={onClose}
+          >
+            Prefiro falar com a equipe
+            <Arrow />
+          </a>
+
+        </div>
+
+        <div className="welcome-visual" aria-hidden="true">
+
+          <div className="welcome-visual-brand">
+            ajudon<span>.</span>
+          </div>
+
+          <div className="welcome-visual-line">
+            <i />
+            atendimento humano
+          </div>
+
+          <div className="welcome-visual-card">
+            <small>SEU NEGÓCIO</small>
+
+            <strong>
+              EM MOVIMENTO
+            </strong>
+
+            <div className="welcome-visual-bars">
+              <i />
+              <i />
+              <i />
+              <i />
+              <i />
+            </div>
+          </div>
+
+          <div className="welcome-visual-orbit" />
+
+        </div>
+
+      </section>
+    </div>
+  );
+}
 function App() {
+  const [welcomeOpen, setWelcomeOpen] = useState(true);
+
+  useEffect(() => {
+    if (!welcomeOpen) {
+      document.body.style.overflow = "";
+      return;
+    }
+
+    document.body.style.overflow = "hidden";
+
+    const handleKeyDown = (event) => {
+      if (event.key === "Escape") {
+        setWelcomeOpen(false);
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+
+    return () => {
+      window.removeEventListener("keydown", handleKeyDown);
+      document.body.style.overflow = "";
+    };
+  }, [welcomeOpen]);
+
+  // resto do seu código...
   const [menuOpen, setMenuOpen] = useState(false);
+  const [faqOpen, setFaqOpen] = useState(null);
+
   const [form, setForm] = useState({
     name: "",
     email: "",
@@ -203,204 +579,905 @@ function App() {
     message: "",
   });
 
-  function closeMenu() {
-    setMenuOpen(false);
-  }
+  const openWhatsApp = (message) => {
+    window.open(
+      `${whatsappUrl}?text=${encodeURIComponent(message)}`,
+      "_blank",
+      "noopener,noreferrer"
+    );
+  };
 
-  function updateForm(event) {
+  const closeMenu = () => {
+    setMenuOpen(false);
+  };
+
+  const updateForm = (event) => {
     const { name, value } = event.target;
+
+    if (name === "phone") {
+      const digits = value.replace(/\D/g, "");
+
+      const limitedDigits = digits.slice(0, 11);
+
+      let formatted = limitedDigits;
+
+      if (limitedDigits.length > 2) {
+        formatted = `(${limitedDigits.slice(
+          0,
+          2
+        )}) ${limitedDigits.slice(2)}`;
+      }
+
+      if (limitedDigits.length > 7) {
+        formatted = `(${limitedDigits.slice(
+          0,
+          2
+        )}) ${limitedDigits.slice(
+          2,
+          7
+        )}-${limitedDigits.slice(7, 11)}`;
+      }
+
+      setForm((current) => ({
+        ...current,
+        phone: formatted,
+      }));
+
+      return;
+    }
 
     setForm((current) => ({
       ...current,
       [name]: value,
     }));
-  }
+  };
 
-  function openWhatsApp(message) {
-    const url = `${whatsappUrl}?text=${encodeURIComponent(message)}`;
-    window.open(url, "_blank", "noopener,noreferrer");
-  }
-
-  function handleSubmit(event) {
+  function submitForm(event) {
     event.preventDefault();
 
     const message =
-      `Olá, Ajudon! Vim pelo site e gostaria de atendimento.\n\n` +
+      `Olá, Ajudon! Vim pelo site e gostaria de conversar com a equipe.\n\n` +
       `Nome: ${form.name}\n` +
-      `E-mail: ${form.email}\n` +
-      `WhatsApp: ${form.phone || "Não informado"}\n` +
-      `Assunto: ${form.service || "Informações gerais"}\n\n` +
-      `Mensagem: ${form.message}`;
+      `E-mail profissional: ${form.email}\n` +
+      `Telefone: ${form.phone || "Não informado"}\n` +
+      `Como podemos ajudar: ${form.service || "Ainda não sei"}\n\n` +
+      `Necessidade: ${form.message}`;
 
     openWhatsApp(message);
   }
 
-  function handleContactClick() {
-    openWhatsApp(
-      "Olá! Acessei o site da Ajudon e gostaria de conversar com a equipe."
-    );
-  }
-
-  async function shareSite() {
-    const shareData = {
-      title: "Ajudon | Contabilidade digital",
-      text: "Conheça a Ajudon: contabilidade digital e serviços para sua empresa.",
-      url: siteUrl,
-    };
-
-    try {
-      if (navigator.share) {
-        await navigator.share(shareData);
-      } else if (navigator.clipboard?.writeText) {
-        await navigator.clipboard.writeText(siteUrl);
-        alert("Link do site copiado!");
-      } else {
-        window.prompt("Copie o link do site:", siteUrl);
-      }
-    } catch (error) {
-      if (error.name !== "AbortError") {
-        window.prompt("Copie o link do site:", siteUrl);
-      }
+  function shareSite() {
+    if (navigator.share) {
+      navigator
+        .share({
+          title: "Ajudon",
+          text: "Conheça a Ajudon.",
+          url: siteUrl,
+        })
+        .catch(() => {});
+    } else if (navigator.clipboard?.writeText) {
+      navigator.clipboard
+        .writeText(siteUrl)
+        .then(() => alert("Link do site copiado!"));
+    } else {
+      window.prompt(
+        "Copie o link do site:",
+        siteUrl
+      );
     }
   }
 
   return (
-    <>
-      <header className="site-header">
-        <nav className="nav container" aria-label="Navegação principal">
-          <a className="brand" href="#inicio" onClick={closeMenu}>
+    <div className="site-shell">
+
+{welcomeOpen && (
+  <WelcomeModal
+    onClose={() => setWelcomeOpen(false)}
+  />
+)}
+      {/* HEADER */}
+
+      <header className="header">
+        <nav className="nav container">
+
+          <a
+            className="brand"
+            href="#inicio"
+            onClick={closeMenu}
+          >
             ajudon<span>.</span>
           </a>
 
           <button
             className="menu-toggle"
             type="button"
-            aria-label={menuOpen ? "Fechar menu" : "Abrir menu"}
-            aria-expanded={menuOpen}
-            onClick={() => setMenuOpen((open) => !open)}
+            onClick={() =>
+              setMenuOpen((value) => !value)
+            }
+            aria-label="Menu"
           >
             {menuOpen ? "×" : "☰"}
           </button>
 
-          <div className={`nav-links ${menuOpen ? "nav-open" : ""}`}>
-            <a href="#inicio" onClick={closeMenu}>
-              Início
-            </a>
+          <div
+            className={`nav-links ${
+              menuOpen ? "nav-open" : ""
+            }`}
+          >
             <a href="#solucoes" onClick={closeMenu}>
               Soluções
             </a>
+
             <a href="#express" onClick={closeMenu}>
               Ajudon Express
             </a>
+
             <a href="#sobre" onClick={closeMenu}>
-              Sobre
+              Empresa
             </a>
-            <a className="nav-contact" href="#contato" onClick={closeMenu}>
-              Fale com a Ajudon <Arrow />
+
+            <a href="#faq" onClick={closeMenu}>
+              Dúvidas
+            </a>
+
+            <a
+              className="nav-cta"
+              href="#contato"
+              onClick={closeMenu}
+            >
+              Fale com a gente
+              <Arrow light />
             </a>
           </div>
+
         </nav>
       </header>
 
-      <FlyingBot />
-      <a
-        className="whatsapp-float"
-        href={`${whatsappUrl}?text=${encodeURIComponent("Olá! Vim pelo site da Ajudon e gostaria de atendimento.")}`}
-        target="_blank"
-        rel="noreferrer"
-        aria-label="Falar com a Ajudon pelo WhatsApp"
-        title="Falar com a Ajudon pelo WhatsApp"
-      >
-        <svg viewBox="0 0 32 32" aria-hidden="true" focusable="false">
-          <path d="M16 3.2A12.6 12.6 0 0 0 5.2 22.3L3.5 28.8l6.7-1.7A12.6 12.6 0 1 0 16 3.2Zm0 22.9a10.2 10.2 0 0 1-5.2-1.4l-.4-.2-3.9 1 1-3.8-.3-.4A10.2 10.2 0 1 1 16 26.1Zm5.6-7.6c-.3-.2-1.9-.9-2.2-1s-.5-.2-.7.2-.8 1-1 1.2-.4.2-.7.1a8.3 8.3 0 0 1-2.5-1.5 9.3 9.3 0 0 1-1.7-2.1c-.2-.3 0-.5.1-.7l.5-.5.3-.5c.1-.2 0-.4 0-.6s-.7-1.8-1-2.5c-.2-.6-.5-.5-.7-.5h-.6c-.2 0-.6.1-.9.4s-1.2 1.2-1.2 2.8 1.2 3.2 1.4 3.4a13.1 13.1 0 0 0 5 4.4c.7.3 1.2.5 1.6.6.7.2 1.3.2 1.8.1.6-.1 1.9-.8 2.2-1.5s.3-1.3.2-1.5-.2-.3-.5-.4Z" />
-        </svg>
-      </a>
-
-
-
       <main>
-        <section className="contact-section" id="contato">
-          <div className="container contact-grid">
-            <div className="contact-copy">
-              <div className="eyebrow eyebrow-light">VAMOS CONVERSAR?</div>
 
-              <h2>
-                Sua empresa tem
-                <span> novos planos?</span>
-              </h2>
+        {/* HERO */}
+
+        <section className="hero" id="inicio">
+
+          <div className="hero-backdrop" />
+
+          <div className="container hero-inner">
+
+            <div className="hero-copy">
+
+              <div className="eyebrow">
+                <span className="live-dot" />
+                CONTABILIDADE DIGITAL PARA NEGÓCIOS EM MOVIMENTO
+              </div>
+
+              <h1>
+                Contabilidade que
+                <br />
+                <span>
+                  acompanha o seu ritmo.
+                </span>
+              </h1>
 
               <p>
-                Conte um pouco sobre o que você precisa. A equipe da Ajudon
-                poderá orientar você sobre os próximos passos.
+                Mais clareza para cuidar da sua empresa.
+                Ajudon combina contabilidade, tecnologia
+                e atendimento humano para simplificar suas
+                decisões e facilitar o dia a dia do seu negócio.
               </p>
 
-              <div className="contact-details">
-                <a href={`mailto:${emailAddress}`}>
-                  <span className="contact-detail-icon">✉</span>
-                  <span>
-                    <small>E-mail</small>
-                    {emailAddress}
-                  </span>
+              <div className="hero-actions">
+
+                <a
+                  className="button button-primary"
+                  href="#contato"
+                >
+                  Começar uma conversa
+                  <Arrow />
                 </a>
 
                 <a
-                  className="contact-instagram"
+                  className="button button-ghost"
+                  href="#solucoes"
+                >
+                  Conhecer soluções
+                </a>
+
+              </div>
+
+              <div className="hero-trust">
+
+                <span>
+                  <b>✓</b>
+                  Atendimento humano
+                </span>
+
+                <span>
+                  <b>✓</b>
+                  Experiência digital
+                </span>
+
+                <span>
+                  <b>✓</b>
+                  Tecnologia que simplifica
+                </span>
+
+              </div>
+
+            </div>
+
+            <HeroDashboard />
+
+          </div>
+
+          <div className="hero-bottom-line container">
+            <span>
+              01 — AJUDON
+            </span>
+
+            <span>
+              CONTABILIDADE · TECNOLOGIA · PESSOAS
+            </span>
+          </div>
+
+        </section>
+
+        {/* MARQUEE */}
+
+        <section
+          className="marquee"
+          aria-label="Diferenciais"
+        >
+          <div className="marquee-track">
+
+            <div className="marquee-group">
+
+              {[
+                "CONTABILIDADE",
+                "TECNOLOGIA",
+                "ATENDIMENTO HUMANO",
+                "SOLUÇÕES DIGITAIS",
+                "EMPRESAS EM MOVIMENTO",
+              ].map((item) => (
+                <span key={item}>
+                  {item}
+                  <i>✦</i>
+                </span>
+              ))}
+
+            </div>
+
+            <div
+              className="marquee-group"
+              aria-hidden="true"
+            >
+
+              {[
+                "CONTABILIDADE",
+                "TECNOLOGIA",
+                "ATENDIMENTO HUMANO",
+                "SOLUÇÕES DIGITAIS",
+                "EMPRESAS EM MOVIMENTO",
+              ].map((item) => (
+                <span key={item}>
+                  {item}
+                  <i>✦</i>
+                </span>
+              ))}
+
+            </div>
+
+          </div>
+        </section>
+
+        {/* SOLUÇÕES */}
+
+        <section
+          className="section solutions"
+          id="solucoes"
+        >
+
+          <div className="container">
+
+            <div className="section-head">
+
+              <div>
+
+                <span className="section-index">
+                  02 / SOLUÇÕES
+                </span>
+
+                <h2>
+                  Um lugar para organizar
+                  <br />
+                  <span>a próxima fase.</span>
+                </h2>
+
+              </div>
+
+              <p>
+                Do primeiro CNPJ à rotina de uma empresa
+                em crescimento, a Ajudon está perto para
+                simplificar o que parece complicado.
+              </p>
+
+            </div>
+
+            <div className="service-grid">
+
+              {services.map((service) => (
+
+                <article
+                  className="service-card"
+                  key={service.icon}
+                >
+
+                  <div className="service-number">
+                    {service.icon}
+                  </div>
+
+                  <div className="service-icon">
+                    <Spark />
+                  </div>
+
+                  <h3>
+                    {service.title}
+                  </h3>
+
+                  <p>
+                    {service.text}
+                  </p>
+
+                  <a href="#contato">
+                    Tenho interesse
+                    <Arrow />
+                  </a>
+
+                </article>
+
+              ))}
+
+            </div>
+
+          </div>
+
+        </section>
+
+        {/* EXPRESS */}
+
+        <section
+          className="express"
+          id="express"
+        >
+
+          <div className="container express-inner">
+
+            <div className="express-copy">
+
+              <span className="section-index">
+                03 / AJUDON EXPRESS
+              </span>
+
+              <h2>
+                Precisa resolver
+                <br />
+                <span>algo específico?</span>
+              </h2>
+
+              <p>
+                Serviços pontuais para demandas empresariais,
+                sem precisar contratar uma mensalidade contábil.
+              </p>
+
+              <a
+                className="button button-light"
+                href="#contato"
+              >
+                Consultar um serviço
+                <Arrow light />
+              </a>
+
+            </div>
+
+            <div className="express-panel">
+
+              <div className="express-panel-head">
+
+                <span>
+                  AJUDON EXPRESS
+                </span>
+
+                <span>
+                  01 — 06
+                </span>
+
+              </div>
+
+              {expressServices.map(
+                (service, index) => (
+
+                  <div
+                    className="express-item"
+                    key={service}
+                  >
+
+                    <span>
+                      {String(index + 1).padStart(
+                        2,
+                        "0"
+                      )}
+                    </span>
+
+                    <strong>
+                      {service}
+                    </strong>
+
+                    <b>↗</b>
+
+                  </div>
+                )
+              )}
+
+              <small>
+                Consulte disponibilidade,
+                documentação necessária e valores
+                com a equipe.
+              </small>
+
+            </div>
+
+          </div>
+
+        </section>
+
+        {/* SOBRE */}
+
+        <section
+          className="section about"
+          id="sobre"
+        >
+
+          <div className="container about-grid">
+
+            <div className="about-art">
+
+              <div className="about-grid-lines" />
+
+              <div className="about-orbit" />
+
+              <div className="about-card">
+
+                <span>
+                  ajudon.
+                </span>
+
+                <small>
+                  KNOWLEDGE × TECHNOLOGY × PEOPLE
+                </small>
+
+                <strong>
+                  Menos complicação.
+                  <br />
+                  Mais movimento.
+                </strong>
+
+                <i>
+                  ✦
+                </i>
+
+              </div>
+
+              <div className="about-float">
+                + tecnologia
+                <br />
+                <b>
+                  + proximidade
+                </b>
+              </div>
+
+            </div>
+
+            <div className="about-copy">
+
+              <span className="section-index">
+                04 / SOBRE A AJUDON
+              </span>
+
+              <h2>
+                Contabilidade sem
+                <br />
+                <span>
+                  cara de burocracia.
+                </span>
+              </h2>
+
+              <p>
+                A Ajudon nasceu para aproximar
+                contabilidade e tecnologia. A ideia é
+                transformar processos que parecem
+                complexos em uma experiência mais clara,
+                digital e humana.
+              </p>
+
+              <p>
+                Você continua focado no seu negócio
+                enquanto a equipe ajuda a organizar a
+                parte contábil, fiscal e empresarial.
+              </p>
+
+              <a
+                className="text-link"
+                href="#contato"
+              >
+                Quero conversar com a Ajudon
+                <Arrow />
+              </a>
+
+            </div>
+
+          </div>
+
+        </section>
+
+        {/* MOMENTOS */}
+
+        <section className="next-step">
+
+          <div className="container next-step-inner">
+
+            <div>
+
+              <span className="section-index">
+                05 / QUAL É O SEU MOMENTO?
+              </span>
+
+              <h2>
+                Por onde
+                <br />
+                <span>
+                  começamos?
+                </span>
+              </h2>
+
+              <p>
+                Escolha o que mais parece com seu momento
+                e siga direto para uma conversa.
+              </p>
+
+            </div>
+
+            <div className="moment-grid">
+
+              <a href="#contato">
+                <span>01</span>
+
+                <strong>
+                  Estou começando
+                </strong>
+
+                <small>
+                  Quero abrir ou estruturar minha empresa.
+                </small>
+
+                <b>↗</b>
+              </a>
+
+              <a href="#contato">
+                <span>02</span>
+
+                <strong>
+                  Já tenho empresa
+                </strong>
+
+                <small>
+                  Quero organizar minha rotina contábil.
+                </small>
+
+                <b>↗</b>
+              </a>
+
+              <a href="#contato">
+                <span>03</span>
+
+                <strong>
+                  Preciso de algo pontual
+                </strong>
+
+                <small>
+                  Quero resolver uma demanda específica.
+                </small>
+
+                <b>↗</b>
+              </a>
+
+            </div>
+
+          </div>
+
+        </section>
+
+        {/* FAQ */}
+
+        <section
+          className="faq section"
+          id="faq"
+        >
+
+          <div className="container faq-grid">
+
+            <div>
+
+              <span className="section-index">
+                06 / DÚVIDAS
+              </span>
+
+              <h2>
+                Antes de
+                <br />
+                <span>
+                  começar.
+                </span>
+              </h2>
+
+              <p>
+                Algumas respostas rápidas para facilitar
+                o primeiro contato.
+              </p>
+
+            </div>
+
+            <div className="faq-list">
+
+              {faqs.map(
+                ([question, answer], index) => (
+
+                  <article
+                    className={`faq-item ${
+                      faqOpen === index
+                        ? "open"
+                        : ""
+                    }`}
+                    key={question}
+                  >
+
+                    <button
+                      type="button"
+                      onClick={() =>
+                        setFaqOpen(
+                          faqOpen === index
+                            ? null
+                            : index
+                        )
+                      }
+                    >
+
+                      <span>
+                        {question}
+                      </span>
+
+                      <b>
+                        {faqOpen === index
+                          ? "−"
+                          : "+"}
+                      </b>
+
+                    </button>
+
+                    {faqOpen === index && (
+                      <p>
+                        {answer}
+                      </p>
+                    )}
+
+                  </article>
+
+                )
+              )}
+
+            </div>
+
+          </div>
+
+        </section>
+
+        {/* CONTATO */}
+
+        <section
+          className="contact"
+          id="contato"
+        >
+
+          <div className="container contact-inner">
+
+            <div className="contact-copy">
+
+              <span className="section-index">
+                07 / VAMOS CONVERSAR?
+              </span>
+
+              <h2>
+                Seu próximo passo
+                <br />
+                <span>
+                  começa aqui.
+                </span>
+              </h2>
+
+              <p>
+                Conte o que você precisa. A equipe Ajudon
+                entende seu cenário e indica o próximo caminho.
+              </p>
+
+              <div className="contact-links">
+
+                <a
+                  className="contact-icon email-icon"
+                  href={`mailto:${emailAddress}`}
+                  aria-label="Enviar e-mail para a Ajudon"
+                  title="Enviar e-mail"
+                >
+                  <svg
+                    viewBox="0 0 24 24"
+                    aria-hidden="true"
+                  >
+                    <rect
+                      x="3"
+                      y="5"
+                      width="18"
+                      height="14"
+                      rx="2"
+                    />
+
+                    <path d="m4 7 8 6 8-6" />
+                  </svg>
+                </a>
+
+                <a
+                  className="contact-icon instagram-icon-only"
                   href={instagramUrl}
                   target="_blank"
                   rel="noreferrer"
+                  aria-label="Instagram da Ajudon"
+                  title="Instagram da Ajudon"
                 >
-                  <span className="contact-detail-icon">◎</span>
-                  <span>
-                    <small>Instagram</small>
-                    @ajudoncontabilidade
-                  </span>
+                  <svg
+                    viewBox="0 0 24 24"
+                    aria-hidden="true"
+                  >
+                    <defs>
+                      <linearGradient
+                        id="instagramGradient"
+                        x1="0%"
+                        y1="100%"
+                        x2="100%"
+                        y2="0%"
+                      >
+                        <stop
+                          offset="0%"
+                          stopColor="#FFDC80"
+                        />
+
+                        <stop
+                          offset="25%"
+                          stopColor="#FCB045"
+                        />
+
+                        <stop
+                          offset="50%"
+                          stopColor="#FD1D1D"
+                        />
+
+                        <stop
+                          offset="75%"
+                          stopColor="#E1306C"
+                        />
+
+                        <stop
+                          offset="100%"
+                          stopColor="#833AB4"
+                        />
+                      </linearGradient>
+                    </defs>
+
+                    <rect
+                      x="3"
+                      y="3"
+                      width="18"
+                      height="18"
+                      rx="5"
+                      fill="none"
+                      stroke="url(#instagramGradient)"
+                      strokeWidth="2"
+                    />
+
+                    <circle
+                      cx="12"
+                      cy="12"
+                      r="4.2"
+                      fill="none"
+                      stroke="url(#instagramGradient)"
+                      strokeWidth="2"
+                    />
+
+                    <circle
+                      cx="17.4"
+                      cy="6.6"
+                      r="1.15"
+                      fill="url(#instagramGradient)"
+                    />
+                  </svg>
                 </a>
+
+                <button
+                  className="contact-icon share-icon-only"
+                  type="button"
+                  onClick={shareSite}
+                  aria-label="Compartilhar site da Ajudon"
+                  title="Compartilhar site"
+                >
+                  <ShareIcon />
+                </button>
+
               </div>
 
-              <button
-                type="button"
-                className="share-site-button"
-                onClick={shareSite}
-              >
-                Compartilhar o site
-              </button>
             </div>
 
-            <form className="contact-form" onSubmit={handleSubmit}>
-              <h3>Fale com a Ajudon</h3>
-              <p>Preencha os campos para preparar sua mensagem.</p>
+            <form
+              className="contact-form"
+              onSubmit={submitForm}
+            >
 
-              <div className="form-row">
+              <div className="form-top">
+
+                <span>
+                  FALE COM A AJUDON
+                </span>
+
+                <i>
+                  ↗
+                </i>
+
+              </div>
+
+              <div className="form-grid">
+
                 <label>
-                  Seu nome
+                  Nome
+
                   <input
-                    type="text"
                     name="name"
                     value={form.name}
                     onChange={updateForm}
-                    placeholder="Como podemos te chamar?"
+                    placeholder="Como podemos chamar você?"
                     autoComplete="name"
                     required
                   />
                 </label>
 
                 <label>
-                  Seu e-mail
+                  E-mail profissional
+
                   <input
                     type="email"
                     name="email"
                     value={form.email}
                     onChange={updateForm}
-                    placeholder="voce@empresa.com"
+                    placeholder="voce@empresa.com.br"
                     autoComplete="email"
                     required
                   />
                 </label>
+
               </div>
 
-              <div className="form-row">
+              <div className="form-grid">
+
                 <label>
-                  WhatsApp <span className="optional">(opcional)</span>
+                  Telefone
+
+                  <small>
+                    (opcional)
+                  </small>
+
                   <input
                     type="tel"
                     name="phone"
@@ -408,36 +1485,60 @@ function App() {
                     onChange={updateForm}
                     placeholder="(11) 99999-9999"
                     autoComplete="tel"
+                    inputMode="numeric"
+                    maxLength={15}
                   />
                 </label>
 
                 <label>
-                  Serviço de interesse
+                  Como podemos ajudar?
+
                   <select
                     name="service"
                     value={form.service}
                     onChange={updateForm}
                   >
-                    <option value="">Selecione uma opção</option>
-                    <option>Contabilidade para tecnologia</option>
-                    <option>Abertura de empresa</option>
-                    <option>Gestão contábil</option>
-                    <option>Planejamento tributário</option>
-                    <option>Emissão de notas fiscais</option>
-                    <option>Ajudon Express</option>
-                    <option>Outro assunto</option>
+                    <option value="">
+                      Escolha uma opção
+                    </option>
+
+                    <option value="Contabilidade">
+                      Contabilidade
+                    </option>
+
+                    <option value="Abertura de empresa">
+                      Abertura de empresa
+                    </option>
+
+                    <option value="Alteração contratual">
+                      Alteração contratual
+                    </option>
+
+                    <option value="Encerramento de empresa">
+                      Encerramento de empresa
+                    </option>
+
+                    <option value="Tecnologia">
+                      Tecnologia
+                    </option>
+
+                    <option value="Outro">
+                      Outro
+                    </option>
                   </select>
                 </label>
+
               </div>
 
               <label>
-                Como podemos ajudar?
+                Conte um pouco sobre sua necessidade
+
                 <textarea
                   name="message"
                   value={form.message}
                   onChange={updateForm}
-                  rows="4"
-                  placeholder="Conte um pouco sobre seu negócio..."
+                  placeholder="O que você gostaria de resolver?"
+                  rows="5"
                   required
                 />
               </label>
@@ -446,346 +1547,89 @@ function App() {
                 className="button button-primary form-button"
                 type="submit"
               >
-                Preparar mensagem <Arrow />
+                Abrir conversa no WhatsApp
+                <Arrow />
               </button>
 
-              <small className="form-disclaimer">
-                O WhatsApp será aberto com a mensagem preenchida. Você poderá
-                revisar e confirmar o envio.
+              <small className="form-note">
+                Você poderá revisar a mensagem antes de enviar.
               </small>
+
             </form>
+
           </div>
+
         </section>
 
-        <section className="hero" id="inicio">
-          <div className="container hero-grid">
-            <div className="hero-copy">
-              <div className="eyebrow">
-                <span className="eyebrow-dot" />
-                CONTABILIDADE DIGITAL E HUMANA
-              </div>
-
-              <h1>
-                Você cuida das suas ideias.
-                <span> A gente cuida da sua empresa.</span>
-              </h1>
-
-              <p className="hero-description">
-                Contabilidade e serviços para quem empreende — com soluções
-                digitais, orientação especializada e atendimento próximo.
-              </p>
-
-              <div className="hero-actions">
-                <a className="button button-primary" href="#contato">
-                  Vamos conversar <Arrow />
-                </a>
-                <a className="button button-secondary" href="#solucoes">
-                  Conheça as soluções
-                </a>
-              </div>
-
-              <div className="hero-points">
-                <span>
-                  <b>✓</b> Suporte próximo
-                </span>
-                <span>
-                  <b>✓</b> Soluções online
-                </span>
-              </div>
-            </div>
-
-            <div
-              className="hero-art"
-              aria-label="Ilustração de organização contábil"
-            >
-              <div className="art-orbit orbit-a" />
-              <div className="art-orbit orbit-b" />
-
-              <div className="art-window">
-                <div className="window-bar">
-                  <div className="window-dots">
-                    <i />
-                    <i />
-                    <i />
-                  </div>
-                  <span>ajudon.</span>
-                </div>
-
-                <div className="window-content">
-                  <span className="art-label">MAIS TEMPO PARA VOCÊ</span>
-                  <h3 className="art-heading">Seu negócio em boas mãos.</h3>
-                  <p className="art-description">
-                    Organização e orientação para você seguir em frente.
-                  </p>
-
-                  <div className="art-status">
-                    <span className="status-check">✓</span>
-                    <strong>Conte com a Ajudon</strong>
-                  </div>
-                </div>
-              </div>
-
-              <div className="floating-note note-top">
-                <span className="note-symbol">↗</span>
-                <div>
-                  <strong>Seu negócio</strong>
-                  <small>em movimento</small>
-                </div>
-              </div>
-
-              <div className="floating-note note-bottom">
-                <span className="note-symbol note-green">✓</span>
-                <div>
-                  <strong>Mais tranquilidade</strong>
-                  <small>na rotina da empresa</small>
-                </div>
-              </div>
-
-              <div className="art-spark spark-one">✳</div>
-              <div className="art-spark spark-two">✦</div>
-            </div>
-          </div>
-        </section>
-
-        <section className="trust-strip" aria-label="Diferenciais da Ajudon">
-          <div className="ticker-track">
-            <div className="ticker-group">
-              <span>CONTABILIDADE</span>
-              <i>✳</i>
-              <span>TECNOLOGIA</span>
-              <i>✳</i>
-              <span>ATENDIMENTO HUMANO</span>
-              <i>✳</i>
-              <span>SOLUÇÕES DIGITAIS</span>
-              <i>✳</i>
-            </div>
-
-            <div className="ticker-group" aria-hidden="true">
-              <span>CONTABILIDADE</span>
-              <i>✳</i>
-              <span>TECNOLOGIA</span>
-              <i>✳</i>
-              <span>ATENDIMENTO HUMANO</span>
-              <i>✳</i>
-              <span>SOLUÇÕES DIGITAIS</span>
-              <i>✳</i>
-            </div>
-          </div>
-        </section>
-
-        <section className="section solutions-section" id="solucoes">
-          <div className="container">
-            <div className="section-heading">
-              <div>
-                <div className="eyebrow">COMO PODEMOS AJUDAR</div>
-                <h2>
-                  Soluções para cada etapa
-                  <span> do seu negócio.</span>
-                </h2>
-              </div>
-
-              <p>
-                Da formalização à rotina contábil, encontre o apoio que faz
-                sentido para sua empresa.
-              </p>
-            </div>
-
-            <div className="service-grid">
-              {services.map((service) => (
-                <article className="service-card" key={service.number}>
-                  <div className="service-card-top">
-                    <span className="service-icon">{service.icon}</span>
-                    <span className="service-number">{service.number}</span>
-                  </div>
-
-                  <h3>{service.title}</h3>
-                  <p>{service.description}</p>
-
-                  <a className="text-link" href="#contato">
-                    Tenho interesse <Arrow />
-                  </a>
-                </article>
-              ))}
-            </div>
-          </div>
-        </section>
-
-        <section className="express-section" id="express">
-          <div className="container express-grid">
-            <div className="express-copy">
-              <div className="eyebrow eyebrow-light">
-                SERVIÇOS POR DEMANDA
-              </div>
-
-              <h2>
-                Precisa resolver algo específico?
-                <span> Conheça a Ajudon Express.</span>
-              </h2>
-
-              <p>
-                Serviços pontuais para demandas empresariais, sem precisar
-                contratar uma mensalidade contábil.
-              </p>
-
-              <a className="button button-light" href="#contato">
-                Consultar um serviço <Arrow />
-              </a>
-            </div>
-
-            <div className="express-list">
-              {expressServices.map((service, index) => (
-                <div className="express-item" key={service}>
-                  <span className="express-check">✓</span>
-                  <span>{service}</span>
-                  <small>{String(index + 1).padStart(2, "0")}</small>
-                </div>
-              ))}
-
-              <p className="express-footnote">
-                Consulte a equipe para confirmar disponibilidade, documentação
-                necessária e valores.
-              </p>
-            </div>
-          </div>
-        </section>
-
-        <section className="section about-section" id="sobre">
-          <div className="container about-grid">
-            <div className="about-visual">
-              <div className="about-circle circle-one" />
-              <div className="about-circle circle-two" />
-
-              <div className="about-brand-card">
-                <span className="about-brand">
-                  ajudon<span>.</span>
-                </span>
-
-                <div className="about-card-line" />
-
-                <p>
-                  Conhecimento contábil.
-                  <br />
-                  Tecnologia. Pessoas.
-                </p>
-
-                <span className="about-card-mark">✳</span>
-              </div>
-            </div>
-
-            <div className="about-copy">
-              <div className="eyebrow">SOBRE A AJUDON</div>
-
-              <h2>
-                Mais clareza para cuidar
-                <span> do que você está construindo.</span>
-              </h2>
-
-              <p>
-                A Ajudon combina uma plataforma digital com atendimento
-                próximo para apoiar empresas e profissionais em sua rotina.
-              </p>
-
-              <p>
-                O objetivo é tornar os processos contábeis mais claros e
-                acessíveis, para que você tenha mais tranquilidade ao cuidar
-                do seu negócio.
-              </p>
-
-              <a className="text-link" href="#contato">
-                Conheça a Ajudon de perto <Arrow />
-              </a>
-            </div>
-          </div>
-        </section>
-
-        <section className="faq-section">
-          <div className="container faq-grid">
-            <div className="faq-intro">
-              <div className="eyebrow">DÚVIDAS FREQUENTES</div>
-
-              <h2>
-                Quer saber
-                <span> mais?</span>
-              </h2>
-
-              <p>
-                Reunimos algumas respostas para ajudar você a dar o próximo
-                passo.
-              </p>
-
-              <a className="text-link" href="#contato">
-                Fale com a equipe <Arrow />
-              </a>
-            </div>
-
-            <div className="faq-list">
-              {faqs.map((faq) => (
-                <details className="faq-item" key={faq.question}>
-                  <summary>
-                    {faq.question}
-                    <span aria-hidden="true">+</span>
-                  </summary>
-                  <p>{faq.answer}</p>
-                </details>
-              ))}
-            </div>
-          </div>
-        </section>
       </main>
 
-            <footer className="site-footer">
+      <footer className="footer">
+
         <div className="container footer-main">
-          <a className="brand footer-brand" href="#inicio">
+
+          <a
+            className="brand footer-brand"
+            href="#inicio"
+          >
             ajudon<span>.</span>
           </a>
 
-          <p>Contabilidade digital com atendimento próximo.</p>
-
-          <div className="footer-contact">
-            <button
-              type="button"
-              className="button button-primary"
-              onClick={handleContactClick}
-            >
-              Falar com a Ajudon <Arrow />
-            </button>
-
-            <a
-              className="button button-secondary footer-instagram"
-              href={instagramUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              aria-label="Visitar o Instagram da Ajudon"
-            >
-              <span aria-hidden="true">◎</span>
-              Instagram <Arrow />
-            </a>
-
-            <a
-              className="button button-secondary footer-email"
-              href={`mailto:${emailAddress}`}
-            >
-              <span aria-hidden="true">✉</span>
-              E-mail <Arrow />
-            </a>
-          </div>
+          <p>
+            Contabilidade, tecnologia e pessoas.
+          </p>
 
           <div className="footer-links">
-            <a href="#solucoes">Soluções</a>
-            <a href="#express">Ajudon Express</a>
-            <a href="#sobre">Sobre</a>
-            <a href="#contato">Contato</a>
+
+            <a href="#solucoes">
+              Soluções
+            </a>
+
+            <a href="#express">
+              Express
+            </a>
+
+            <a href="#sobre">
+              Empresa
+            </a>
+
+            <a href="#contato">
+              Contato
+            </a>
+
           </div>
+
         </div>
 
         <div className="container footer-bottom">
-          <span>© {new Date().getFullYear()} Ajudon</span>
-          <a href={siteUrl} target="_blank" rel="noreferrer">
-            Site oficial <Arrow />
+
+          <span>
+            © {new Date().getFullYear()} Ajudon.
+            Todos os direitos reservados.
+          </span>
+
+          <a href="#inicio">
+            Voltar ao topo ↑
           </a>
+
         </div>
+
       </footer>
-    </>
+
+      <FlyingBot />
+
+      <a
+        className="whatsapp-float"
+        href={`${whatsappUrl}?text=${encodeURIComponent(
+          "Olá! Vim pelo site da Ajudon e gostaria de atendimento."
+        )}`}
+        target="_blank"
+        rel="noreferrer"
+        aria-label="Falar com a Ajudon pelo WhatsApp"
+      >
+        <WhatsAppIcon />
+      </a>
+
+    </div>
   );
 }
 

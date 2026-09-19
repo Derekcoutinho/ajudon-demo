@@ -9,6 +9,68 @@ body,
   margin: 0;
 }
 
+html {
+  scroll-behavior: smooth;
+}
+
 body {
   min-width: 320px;
+}
+
+button,
+input,
+textarea,
+select {
+  font: inherit;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+button,
+a {
+  -webkit-tap-highlight-color: transparent;
+}
+.instagram-contact {
+  display: flex !important;
+  align-items: center;
+  gap: 22px;
+  text-decoration: none;
+}
+
+.instagram-icon {
+  width: 36px;
+  height: 36px;
+  display: flex;
+  flex-shrink: 0;
+  transition: transform 0.25s ease;
+}
+
+.instagram-icon svg {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+.instagram-divider {
+  width: 1px;
+  height: 34px;
+  background: rgba(150, 180, 220, 0.28);
+}
+
+.instagram-contact strong {
+  color: #8ea6c8;
+  font-size: 18px;
+  font-weight: 500;
+  transition: color 0.25s ease;
+}
+
+.instagram-contact:hover strong {
+  color: #ffffff;
+}
+
+.instagram-contact:hover .instagram-icon {
+  transform: scale(1.05);
 }
