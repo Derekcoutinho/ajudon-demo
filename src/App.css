@@ -2605,3 +2605,209 @@ main.page-contato .contact-section {
     max-height: calc(100vh - 130px);
   }
 }
+
+
+/* =========================================================
+   AJUSTE MOBILE FINAL — MENU + ASSISTENTE + WHATSAPP
+   Corrige posicionamento no iPhone e Android.
+========================================================= */
+
+.site-header {
+  position: relative;
+  z-index: 3000;
+  border-bottom: 1px solid rgba(143, 177, 220, 0.08);
+  background: rgba(5, 11, 20, 0.94);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+}
+
+.nav {
+  position: relative;
+  z-index: 3001;
+}
+
+/* O JSX usa .ajudon-assistant — esta era a causa do robô subir para o topo. */
+.ajudon-assistant {
+  position: fixed;
+  left: 24px;
+  bottom: 24px;
+  z-index: 4000;
+  width: 78px;
+  height: 78px;
+}
+
+.ajudon-assistant .flying-bot {
+  position: absolute;
+  inset: 0;
+  width: 78px;
+  height: 78px;
+}
+
+.ajudon-assistant .assistant-panel {
+  position: absolute;
+  left: 0;
+  bottom: 92px;
+  width: 350px;
+  max-width: calc(100vw - 28px);
+  z-index: 4001;
+}
+
+/* Menu mobile realmente flutuante, sem deixar o conteúdo aparecer por baixo. */
+@media (max-width: 680px) {
+  .site-header {
+    position: sticky;
+    top: 0;
+  }
+
+  .nav {
+    min-height: 68px;
+  }
+
+  .nav-links {
+    position: absolute;
+    top: calc(100% + 8px);
+    right: 0;
+    left: 0;
+    display: none;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 3px;
+    padding: 8px;
+    border: 1px solid rgba(143, 177, 220, 0.18);
+    border-radius: 18px;
+    background: #081321;
+    box-shadow:
+      0 24px 70px rgba(0, 0, 0, 0.58),
+      0 0 35px rgba(72, 217, 244, 0.06);
+    z-index: 3005;
+  }
+
+  .nav-links.nav-open {
+    display: flex;
+  }
+
+  .nav-links > a {
+    min-height: 48px;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    padding: 12px 14px;
+    border-radius: 11px;
+  }
+
+  .nav-links > a.is-active {
+    color: var(--cyan);
+    background: rgba(72, 217, 244, 0.08);
+  }
+
+  .nav-contact {
+    justify-content: space-between !important;
+  }
+
+  .menu-toggle {
+    position: relative;
+    z-index: 3010;
+    width: 42px;
+    height: 42px;
+    display: grid;
+    place-items: center;
+    padding: 0;
+    font-size: 29px;
+    line-height: 1;
+  }
+
+  .ajudon-assistant {
+    left: 14px;
+    bottom: 24px;
+    width: 72px;
+    height: 72px;
+  }
+
+  .ajudon-assistant .flying-bot {
+    width: 72px;
+    height: 72px;
+  }
+
+  .ajudon-assistant .flying-bot img {
+    width: 64px;
+    height: 64px;
+  }
+
+  .ajudon-assistant .flying-bot > span {
+    left: 50%;
+    bottom: calc(100% + 5px);
+    transform: translateX(-8%);
+  }
+
+  .ajudon-assistant .assistant-panel {
+    left: 0;
+    bottom: 84px;
+    width: calc(100vw - 28px);
+    max-height: calc(100vh - 120px);
+    border-radius: 18px;
+  }
+
+  .assistant-messages {
+    max-height: min(310px, 40vh);
+  }
+
+  /* WhatsApp: verde real + brilho, igual em iPhone e Android. */
+  .whatsapp-float {
+    right: 16px;
+    bottom: 20px;
+    width: 58px;
+    height: 58px;
+    background: #25D366 !important;
+    color: #ffffff !important;
+    border: 2px solid rgba(255,255,255,0.2);
+    box-shadow:
+      0 0 0 5px rgba(37, 211, 102, 0.08),
+      0 0 24px rgba(37, 211, 102, 0.48),
+      0 12px 30px rgba(0, 0, 0, 0.38);
+    animation: whatsappPulse 2.4s ease-in-out infinite;
+  }
+
+  .whatsapp-float svg {
+    width: 31px;
+    height: 31px;
+    fill: #ffffff !important;
+  }
+}
+
+@keyframes whatsappPulse {
+  0%, 100% {
+    box-shadow:
+      0 0 0 5px rgba(37, 211, 102, 0.08),
+      0 0 24px rgba(37, 211, 102, 0.48),
+      0 12px 30px rgba(0, 0, 0, 0.38);
+  }
+  50% {
+    box-shadow:
+      0 0 0 8px rgba(37, 211, 102, 0.05),
+      0 0 34px rgba(37, 211, 102, 0.68),
+      0 12px 30px rgba(0, 0, 0, 0.38);
+  }
+}
+
+/* Ícones dos serviços: evita símbolos com aparência diferente entre iOS e Android. */
+.service-icon,
+.service-card .icon,
+.services-grid .icon {
+  font-family: "DM Mono", monospace;
+  font-variant-emoji: text;
+}
+
+
+/* Avatar do assistente: usa o mesmo robô verde do botão flutuante. */
+.assistant-avatar {
+  overflow: hidden;
+  padding: 4px;
+}
+
+.assistant-avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  display: block;
+  filter: drop-shadow(0 3px 8px rgba(72, 217, 244, 0.18));
+}

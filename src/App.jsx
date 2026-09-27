@@ -152,7 +152,7 @@ function FlyingBot() {
       {isOpen && (
         <section className="assistant-panel" aria-label="Assistente virtual da Ajudon">
           <header className="assistant-header">
-            <div className="assistant-avatar" aria-hidden="true">a.</div>
+            <div className="assistant-avatar" aria-hidden="true"><img src="/bot-ajudon.png" alt="" /></div>
             <div className="assistant-heading">
               <strong>Assistente Ajudon</strong>
               <span><i /> Posso ajudar você</span>
