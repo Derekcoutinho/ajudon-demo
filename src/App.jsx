@@ -219,85 +219,101 @@ function HeroDashboard() {
 
 function FlyingBot() {
   const [isOpen, setIsOpen] = useState(false);
-
   const [messages, setMessages] = useState([
     {
       from: "bot",
-      text: "Olá! Sou o assistente da Ajudon. O que você está procurando?",
+      text: "Olá! 👋 Sou o assistente da Ajudon. Posso te orientar sobre abertura de empresa, contabilidade para tecnologia, Ajudon Express e outros serviços.",
     },
   ]);
 
   const suggestions = [
     "Quero abrir uma empresa",
-    "Contabilidade para tecnologia",
-    "Conhecer a Ajudon Express",
-    "Falar com a equipe",
+    "Sou DEV / trabalho com tecnologia",
+    "O que é a Ajudon Express?",
+    "Preciso de uma certidão",
+    "Quero falar com a equipe",
   ];
 
   function sendMessage(text) {
     const question = text.trim();
-
     if (!question) return;
 
     setMessages((current) => [
       ...current,
-      {
-        from: "user",
-        text: question,
-      },
+      { from: "user", text: question },
     ]);
 
-    const normalized = question.toLowerCase();
+    const normalized = question
+      .toLowerCase()
+      .normalize("NFD")
+      .replace(/[\u0300-\u036f]/g, "");
 
     let answer =
-      "Posso orientar sobre as soluções da Ajudon ou encaminhar você para a equipe pelo WhatsApp.";
+      "Posso te orientar sobre as soluções da Ajudon. Se preferir, você também pode continuar o atendimento com a equipe pelo WhatsApp.";
 
     if (
-      /(abrir|abertura|criar|formalizar).*(empresa|negócio)|(empresa|negócio).*(abrir|abertura)/.test(
+      /(abrir|abertura|criar|formalizar|cnpj).*(empresa|negocio|pj)|(empresa|negocio).*(abrir|abertura|cnpj)/.test(
         normalized
       )
     ) {
       answer =
-        "A Ajudon pode orientar a abertura e formalização da empresa. Para entender documentos e etapas, continue pelo WhatsApp.";
+        "A Ajudon trabalha com abertura de CNPJ e formalização de empresas, com orientação durante o processo. A abertura pode ser feita sem sair de casa. Se quiser, posso te encaminhar para a equipe pelo WhatsApp.";
     } else if (
-      /(tecnologia|desenvolvedor|designer|programador|ti)/.test(
+      /(dev|desenvolvedor|designer|programador|tecnologia|ti|marketing digital|representante comercial|prestador)/.test(
         normalized
       )
     ) {
       answer =
-        "A Ajudon oferece apoio contábil para profissionais e empresas de tecnologia, com orientação para a rotina contábil e fiscal.";
+        "Sim. A Ajudon tem contabilidade especializada para profissionais de TI, DEV's, designers, marketing digital, prestadores de serviços, representantes comerciais e empresas de tecnologia. O atendimento é digital e humanizado.";
     } else if (
-      /(express|pontual|certidão|certidao|regularização|regularizacao|alteração|alteracao|encerramento)/.test(
-        normalized
-      )
+      /(nota fiscal|nota|emissao de nota|emitir nota)/.test(normalized)
     ) {
       answer =
-        "A Ajudon Express reúne serviços por demanda, como abertura, alteração, encerramento, regularização e certidões.";
+        "A Ajudon também trabalha com habilitação e orientação para emissão de nota fiscal, além da rotina contábil e fiscal da empresa.";
     } else if (
-      /(preço|preco|valor|quanto custa|orçamento|orcamento)/.test(
+      /(express|dbe|coleta web|certidao|regularizacao|regularizar|alteracao|alterar|baixa|pesquisa|inscricao estadual|inteiro teor|simplificada|especifica)/.test(
         normalized
       )
     ) {
       answer =
-        "Os valores dependem do serviço e da necessidade. Posso encaminhar você para consultar a equipe.";
+        "A Ajudon Express oferece serviços rápidos e pontuais, sem compromisso de fidelidade ou mensalidade. Entre eles estão DBE/Coleta Web, pesquisas, certidões, regularização, abertura, alteração, baixa, Certidão de Inteiro Teor, Certidão Simplificada, Certidão Específica e serviços relacionados à inscrição estadual.";
     } else if (
-      /(contato|whatsapp|falar|humano|equipe)/.test(
+      /(preco|valor|quanto custa|orcamento|mensalidade)/.test(normalized)
+    ) {
+      answer =
+        "O valor depende do serviço e da necessidade da empresa. Para receber uma proposta, posso te encaminhar diretamente para a equipe da Ajudon.";
+    } else if (
+      /(fora de sp|outro estado|outro lugar|minas|rj|parana|bahia|estado)/.test(
         normalized
       )
     ) {
       answer =
-        "Claro. Use o botão abaixo para continuar o atendimento com a equipe da Ajudon pelo WhatsApp.";
+        "Não tem problema não ser de São Paulo. A Ajudon orienta o cliente a entrar em contato para verificar a disponibilidade do serviço no estado desejado.";
+    } else if (
+      /(imposto|tribut|economizar|economia|planejamento tributario|simples|lucro)/.test(
+        normalized
+      )
+    ) {
+      answer =
+        "A Ajudon oferece planejamento tributário e contabilidade digital para ajudar o negócio a tomar decisões com mais clareza. A análise depende do perfil e da atividade da empresa.";
+    } else if (
+      /(contato|whatsapp|falar|humano|equipe|atendente)/.test(normalized)
+    ) {
+      answer =
+        "Claro. Clique em 'Continuar no WhatsApp' e sua conversa será encaminhada para a equipe da Ajudon.";
+    } else if (
+      /(o que voces fazem|servicos|solucoes|ajudon)/.test(normalized)
+    ) {
+      answer =
+        "A Ajudon oferece soluções contábeis digitais com atendimento humanizado, incluindo abertura de empresa, contabilidade para tecnologia, planejamento tributário, emissão de notas fiscais e Ajudon Express para serviços pontuais.";
     }
 
     window.setTimeout(() => {
       setMessages((current) => [
         ...current,
-        {
-          from: "bot",
-          text: answer,
-        },
+        { from: "bot", text: answer },
       ]);
-    }, 220);
+    }, 350);
   }
 
   function openWhatsApp() {
@@ -313,122 +329,65 @@ function FlyingBot() {
 
   function handleSubmit(event) {
     event.preventDefault();
-
     const input = event.currentTarget.elements.message;
-
     sendMessage(input.value);
-
     input.value = "";
   }
 
   return (
     <div className="assistant-wrap">
       {isOpen && (
-        <section
-          className="assistant-panel"
-          aria-label="Assistente virtual da Ajudon"
-        >
+        <section className="assistant-panel" aria-label="Assistente virtual da Ajudon">
           <header className="assistant-header">
-            <div className="assistant-avatar">
-              a.
-            </div>
-
+            <div className="assistant-avatar">a.</div>
             <div className="assistant-heading">
               <strong>Assistente Ajudon</strong>
-
-              <span>
-                <i /> online
-              </span>
+              <span><i /> online · atendimento digital</span>
             </div>
-
-            <button
-              type="button"
-              onClick={() => setIsOpen(false)}
-              aria-label="Fechar"
-            >
-              ×
-            </button>
+            <button type="button" onClick={() => setIsOpen(false)} aria-label="Fechar">×</button>
           </header>
 
-          <div
-            className="assistant-messages"
-            aria-live="polite"
-          >
+          <div className="assistant-messages" aria-live="polite">
             {messages.map((message, index) => (
-              <div
-                className={`assistant-message ${message.from}`}
-                key={`${index}-${message.from}`}
-              >
+              <div className={`assistant-message ${message.from}`} key={`${index}-${message.from}`}>
                 {message.text}
               </div>
             ))}
 
             <div className="assistant-actions">
               {suggestions.map((suggestion) => (
-                <button
-                  type="button"
-                  key={suggestion}
-                  onClick={() => sendMessage(suggestion)}
-                >
+                <button type="button" key={suggestion} onClick={() => sendMessage(suggestion)}>
                   {suggestion}
                 </button>
               ))}
             </div>
           </div>
 
-          <form
-            className="assistant-compose"
-            onSubmit={handleSubmit}
-          >
-            <input
-              name="message"
-              placeholder="Digite sua dúvida..."
-              autoComplete="off"
-              aria-label="Digite sua dúvida"
-            />
-
-            <button
-              type="submit"
-              aria-label="Enviar"
-            >
-              ↑
-            </button>
+          <form className="assistant-compose" onSubmit={handleSubmit}>
+            <input name="message" placeholder="Digite sua dúvida..." autoComplete="off" aria-label="Digite sua dúvida" />
+            <button type="submit" aria-label="Enviar">↑</button>
           </form>
 
-          <button
-            className="assistant-whatsapp"
-            type="button"
-            onClick={openWhatsApp}
-          >
-            Continuar no WhatsApp
-            <Arrow />
+          <button className="assistant-whatsapp" type="button" onClick={openWhatsApp}>
+            Continuar no WhatsApp <Arrow />
           </button>
         </section>
       )}
 
       <button
-        className={`flying-bot ${
-          isOpen ? "is-open" : ""
-        }`}
+        className={`flying-bot ${isOpen ? "is-open" : ""}`}
         type="button"
         onClick={() => setIsOpen((value) => !value)}
         aria-expanded={isOpen}
         aria-label="Abrir assistente Ajudon"
       >
-        <img
-          src="/bot-ajudon.png"
-          alt=""
-        />
-
-        {!isOpen && (
-          <span>
-            Posso ajudar?
-          </span>
-        )}
+        <img src="/ajudon-bot.png" alt="Assistente Ajudon" onError={(event) => { event.currentTarget.style.display = "none"; }} />
+        <span>Posso ajudar?</span>
       </button>
     </div>
   );
 }
+
 function WelcomeModal({ onClose }) {
   return (
     <div
