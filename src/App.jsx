@@ -87,7 +87,10 @@ const faqs = [
 function Arrow() {
   return (
     <span aria-hidden="true" className="arrow">
-      ↗
+      <svg viewBox="0 0 20 20" focusable="false">
+        <path d="M5 15L15 5" />
+        <path d="M8 5H15V12" />
+      </svg>
     </span>
   );
 }
@@ -152,7 +155,7 @@ function FlyingBot() {
       {isOpen && (
         <section className="assistant-panel" aria-label="Assistente virtual da Ajudon">
           <header className="assistant-header">
-            <div className="assistant-avatar" aria-hidden="true"><img src="/bot-ajudon.png" alt="" /></div>
+            <div className="assistant-avatar" aria-hidden="true">a.</div>
             <div className="assistant-heading">
               <strong>Assistente Ajudon</strong>
               <span><i /> Posso ajudar você</span>
@@ -195,10 +198,6 @@ function FlyingBot() {
 
 function App() {
   const [menuOpen, setMenuOpen] = useState(false);
-  const [activePage, setActivePage] = useState(() => {
-    const hash = window.location.hash.replace("#", "");
-    return ["inicio", "solucoes", "express", "sobre", "contato"].includes(hash) ? hash : "inicio";
-  });
   const [form, setForm] = useState({
     name: "",
     email: "",
@@ -209,18 +208,6 @@ function App() {
 
   function closeMenu() {
     setMenuOpen(false);
-  }
-
-  function navigateTo(page) {
-    setActivePage(page);
-    setMenuOpen(false);
-    window.history.replaceState(null, "", page === "inicio" ? window.location.pathname : `#${page}`);
-    window.scrollTo({ top: 0, behavior: "smooth" });
-  }
-
-  function handlePageLink(event, page) {
-    event.preventDefault();
-    navigateTo(page);
   }
 
   function updateForm(event) {
@@ -284,7 +271,7 @@ function App() {
     <>
       <header className="site-header">
         <nav className="nav container" aria-label="Navegação principal">
-          <a className="brand" href="#inicio" onClick={(event) => handlePageLink(event, "inicio")}>
+          <a className="brand" href="#inicio" onClick={closeMenu}>
             ajudon<span>.</span>
           </a>
 
@@ -299,19 +286,19 @@ function App() {
           </button>
 
           <div className={`nav-links ${menuOpen ? "nav-open" : ""}`}>
-            <a className={activePage === "inicio" ? "is-active" : ""} href="#inicio" onClick={(event) => handlePageLink(event, "inicio")}>
+            <a href="#inicio" onClick={closeMenu}>
               Início
             </a>
-            <a className={activePage === "solucoes" ? "is-active" : ""} href="#solucoes" onClick={(event) => handlePageLink(event, "solucoes")}>
+            <a href="#solucoes" onClick={closeMenu}>
               Soluções
             </a>
-            <a className={activePage === "express" ? "is-active" : ""} href="#express" onClick={(event) => handlePageLink(event, "express")}>
+            <a href="#express" onClick={closeMenu}>
               Ajudon Express
             </a>
-            <a className={activePage === "sobre" ? "is-active" : ""} href="#sobre" onClick={(event) => handlePageLink(event, "sobre")}>
+            <a href="#sobre" onClick={closeMenu}>
               Sobre
             </a>
-            <a className="nav-contact" href="#contato" onClick={(event) => handlePageLink(event, "contato")}>
+            <a className="nav-contact" href="#contato" onClick={closeMenu}>
               Fale com a Ajudon <Arrow />
             </a>
           </div>
@@ -334,7 +321,283 @@ function App() {
 
 
 
-      <main className={`page-${activePage}`}>
+      <main>
+        <section className="hero" id="inicio">
+          <div className="container hero-grid">
+            <div className="hero-copy">
+              <div className="eyebrow">
+                <span className="eyebrow-dot" />
+                CONTABILIDADE DIGITAL E HUMANA
+              </div>
+
+              <h1>
+                Você cuida das suas ideias.
+                <span> A gente cuida da sua empresa.</span>
+              </h1>
+
+              <p className="hero-description">
+                Contabilidade e serviços para quem empreende — com soluções
+                digitais, orientação especializada e atendimento próximo.
+              </p>
+
+              <div className="hero-actions">
+                <a className="button button-primary" href="#contato">
+                  Vamos conversar <Arrow />
+                </a>
+                <a className="button button-secondary" href="#solucoes">
+                  Conheça as soluções
+                </a>
+              </div>
+
+              <div className="hero-points">
+                <span>
+                  <b>✓</b> Suporte próximo
+                </span>
+                <span>
+                  <b>✓</b> Soluções online
+                </span>
+              </div>
+            </div>
+
+            <div
+              className="hero-art"
+              aria-label="Ilustração de organização contábil"
+            >
+              <div className="art-orbit orbit-a" />
+              <div className="art-orbit orbit-b" />
+
+              <div className="art-window">
+                <div className="window-bar">
+                  <div className="window-dots">
+                    <i />
+                    <i />
+                    <i />
+                  </div>
+                  <span>ajudon.</span>
+                </div>
+
+                <div className="window-content">
+                  <span className="art-label">MAIS TEMPO PARA VOCÊ</span>
+                  <h3 className="art-heading">Seu negócio em boas mãos.</h3>
+                  <p className="art-description">
+                    Organização e orientação para você seguir em frente.
+                  </p>
+
+                  <div className="art-status">
+                    <span className="status-check">✓</span>
+                    <strong>Conte com a Ajudon</strong>
+                  </div>
+                </div>
+              </div>
+
+              <div className="floating-note note-top">
+                <span className="note-symbol">↗</span>
+                <div>
+                  <strong>Seu negócio</strong>
+                  <small>em movimento</small>
+                </div>
+              </div>
+
+              <div className="floating-note note-bottom">
+                <span className="note-symbol note-green">✓</span>
+                <div>
+                  <strong>Mais tranquilidade</strong>
+                  <small>na rotina da empresa</small>
+                </div>
+              </div>
+
+              <div className="art-spark spark-one">✳</div>
+              <div className="art-spark spark-two">✦</div>
+            </div>
+          </div>
+        </section>
+
+        <section className="trust-strip" aria-label="Diferenciais da Ajudon">
+          <div className="ticker-track">
+            <div className="ticker-group">
+              <span>CONTABILIDADE</span>
+              <i>✳</i>
+              <span>TECNOLOGIA</span>
+              <i>✳</i>
+              <span>ATENDIMENTO HUMANO</span>
+              <i>✳</i>
+              <span>SOLUÇÕES DIGITAIS</span>
+              <i>✳</i>
+            </div>
+
+            <div className="ticker-group" aria-hidden="true">
+              <span>CONTABILIDADE</span>
+              <i>✳</i>
+              <span>TECNOLOGIA</span>
+              <i>✳</i>
+              <span>ATENDIMENTO HUMANO</span>
+              <i>✳</i>
+              <span>SOLUÇÕES DIGITAIS</span>
+              <i>✳</i>
+            </div>
+          </div>
+        </section>
+
+        <section className="section solutions-section" id="solucoes">
+          <div className="container">
+            <div className="section-heading">
+              <div>
+                <div className="eyebrow">COMO PODEMOS AJUDAR</div>
+                <h2>
+                  Soluções para cada etapa
+                  <span> do seu negócio.</span>
+                </h2>
+              </div>
+
+              <p>
+                Da formalização à rotina contábil, encontre o apoio que faz
+                sentido para sua empresa.
+              </p>
+            </div>
+
+            <div className="service-grid">
+              {services.map((service) => (
+                <article className="service-card" key={service.number}>
+                  <div className="service-card-top">
+                    <span className="service-icon">{service.icon}</span>
+                    <span className="service-number">{service.number}</span>
+                  </div>
+
+                  <h3>{service.title}</h3>
+                  <p>{service.description}</p>
+
+                  <a className="text-link" href="#contato">
+                    Tenho interesse <Arrow />
+                  </a>
+                </article>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        <section className="express-section" id="express">
+          <div className="container express-grid">
+            <div className="express-copy">
+              <div className="eyebrow eyebrow-light">
+                SERVIÇOS POR DEMANDA
+              </div>
+
+              <h2>
+                Precisa resolver algo específico?
+                <span> Conheça a Ajudon Express.</span>
+              </h2>
+
+              <p>
+                Serviços pontuais para demandas empresariais, sem precisar
+                contratar uma mensalidade contábil.
+              </p>
+
+              <a className="button button-light" href="#contato">
+                Consultar um serviço <Arrow />
+              </a>
+            </div>
+
+            <div className="express-list">
+              {expressServices.map((service, index) => (
+                <div className="express-item" key={service}>
+                  <span className="express-check">✓</span>
+                  <span>{service}</span>
+                  <small>{String(index + 1).padStart(2, "0")}</small>
+                </div>
+              ))}
+
+              <p className="express-footnote">
+                Consulte a equipe para confirmar disponibilidade, documentação
+                necessária e valores.
+              </p>
+            </div>
+          </div>
+        </section>
+
+        <section className="section about-section" id="sobre">
+          <div className="container about-grid">
+            <div className="about-visual">
+              <div className="about-circle circle-one" />
+              <div className="about-circle circle-two" />
+
+              <div className="about-brand-card">
+                <span className="about-brand">
+                  ajudon<span>.</span>
+                </span>
+
+                <div className="about-card-line" />
+
+                <p>
+                  Conhecimento contábil.
+                  <br />
+                  Tecnologia. Pessoas.
+                </p>
+
+                <span className="about-card-mark">✳</span>
+              </div>
+            </div>
+
+            <div className="about-copy">
+              <div className="eyebrow">SOBRE A AJUDON</div>
+
+              <h2>
+                Mais clareza para cuidar
+                <span> do que você está construindo.</span>
+              </h2>
+
+              <p>
+                A Ajudon combina uma plataforma digital com atendimento
+                próximo para apoiar empresas e profissionais em sua rotina.
+              </p>
+
+              <p>
+                O objetivo é tornar os processos contábeis mais claros e
+                acessíveis, para que você tenha mais tranquilidade ao cuidar
+                do seu negócio.
+              </p>
+
+              <a className="text-link" href="#contato">
+                Conheça a Ajudon de perto <Arrow />
+              </a>
+            </div>
+          </div>
+        </section>
+
+        <section className="faq-section">
+          <div className="container faq-grid">
+            <div className="faq-intro">
+              <div className="eyebrow">DÚVIDAS FREQUENTES</div>
+
+              <h2>
+                Quer saber
+                <span> mais?</span>
+              </h2>
+
+              <p>
+                Reunimos algumas respostas para ajudar você a dar o próximo
+                passo.
+              </p>
+
+              <a className="text-link" href="#contato">
+                Fale com a equipe <Arrow />
+              </a>
+            </div>
+
+            <div className="faq-list">
+              {faqs.map((faq) => (
+                <details className="faq-item" key={faq.question}>
+                  <summary>
+                    {faq.question}
+                    <span aria-hidden="true">+</span>
+                  </summary>
+                  <p>{faq.answer}</p>
+                </details>
+              ))}
+            </div>
+          </div>
+        </section>
+      </main>
+
         <section className="contact-section" id="contato">
           <div className="container contact-grid">
             <div className="contact-copy">
@@ -473,295 +736,20 @@ function App() {
           </div>
         </section>
 
-        <section className="hero" id="inicio">
-          <div className="container hero-grid">
-            <div className="hero-copy">
-              <div className="eyebrow">
-                <span className="eyebrow-dot" />
-                CONTABILIDADE DIGITAL E HUMANA
-              </div>
-
-              <h1>
-                Você cuida das suas ideias.
-                <span> A gente cuida da sua empresa.</span>
-              </h1>
-
-              <p className="hero-description">
-                Contabilidade e serviços para quem empreende — com soluções
-                digitais, orientação especializada e atendimento próximo.
-              </p>
-
-              <div className="hero-actions">
-                <a className="button button-primary" href="#contato" onClick={(event) => handlePageLink(event, "contato")}>
-                  Vamos conversar <Arrow />
-                </a>
-                <a className="button button-secondary" href="#solucoes" onClick={(event) => handlePageLink(event, "solucoes")}>
-                  Conheça as soluções
-                </a>
-              </div>
-
-              <div className="hero-points">
-                <span>
-                  <b>✓</b> Suporte próximo
-                </span>
-                <span>
-                  <b>✓</b> Soluções online
-                </span>
-              </div>
-            </div>
-
-            <div
-              className="hero-art"
-              aria-label="Ilustração de organização contábil"
-            >
-              <div className="art-orbit orbit-a" />
-              <div className="art-orbit orbit-b" />
-
-              <div className="art-window">
-                <div className="window-bar">
-                  <div className="window-dots">
-                    <i />
-                    <i />
-                    <i />
-                  </div>
-                  <span>ajudon.</span>
-                </div>
-
-                <div className="window-content">
-                  <span className="art-label">MAIS TEMPO PARA VOCÊ</span>
-                  <h3 className="art-heading">Seu negócio em boas mãos.</h3>
-                  <p className="art-description">
-                    Organização e orientação para você seguir em frente.
-                  </p>
-
-                  <div className="art-status">
-                    <span className="status-check">✓</span>
-                    <strong>Conte com a Ajudon</strong>
-                  </div>
-                </div>
-              </div>
-
-              <div className="floating-note note-top">
-                <span className="note-symbol">↗</span>
-                <div>
-                  <strong>Seu negócio</strong>
-                  <small>em movimento</small>
-                </div>
-              </div>
-
-              <div className="floating-note note-bottom">
-                <span className="note-symbol note-green">✓</span>
-                <div>
-                  <strong>Mais tranquilidade</strong>
-                  <small>na rotina da empresa</small>
-                </div>
-              </div>
-
-              <div className="art-spark spark-one">✳</div>
-              <div className="art-spark spark-two">✦</div>
-            </div>
-          </div>
-        </section>
-
-        <section className="trust-strip" aria-label="Diferenciais da Ajudon">
-          <div className="ticker-track">
-            <div className="ticker-group">
-              <span>CONTABILIDADE</span>
-              <i>✳</i>
-              <span>TECNOLOGIA</span>
-              <i>✳</i>
-              <span>ATENDIMENTO HUMANO</span>
-              <i>✳</i>
-              <span>SOLUÇÕES DIGITAIS</span>
-              <i>✳</i>
-            </div>
-
-            <div className="ticker-group" aria-hidden="true">
-              <span>CONTABILIDADE</span>
-              <i>✳</i>
-              <span>TECNOLOGIA</span>
-              <i>✳</i>
-              <span>ATENDIMENTO HUMANO</span>
-              <i>✳</i>
-              <span>SOLUÇÕES DIGITAIS</span>
-              <i>✳</i>
-            </div>
-          </div>
-        </section>
-
-        <section className="section solutions-section" id="solucoes">
-          <div className="container">
-            <div className="section-heading">
-              <div>
-                <div className="eyebrow">COMO PODEMOS AJUDAR</div>
-                <h2>
-                  Soluções para cada etapa
-                  <span> do seu negócio.</span>
-                </h2>
-              </div>
-
-              <p>
-                Da formalização à rotina contábil, encontre o apoio que faz
-                sentido para sua empresa.
-              </p>
-            </div>
-
-            <div className="service-grid">
-              {services.map((service) => (
-                <article className="service-card" key={service.number}>
-                  <div className="service-card-top">
-                    <span className="service-icon">{service.icon}</span>
-                    <span className="service-number">{service.number}</span>
-                  </div>
-
-                  <h3>{service.title}</h3>
-                  <p>{service.description}</p>
-
-                  <a className="text-link" href="#contato" onClick={(event) => handlePageLink(event, "contato")}>
-                    Tenho interesse <Arrow />
-                  </a>
-                </article>
-              ))}
-            </div>
-          </div>
-        </section>
-
-        <section className="express-section" id="express">
-          <div className="container express-grid">
-            <div className="express-copy">
-              <div className="eyebrow eyebrow-light">
-                SERVIÇOS POR DEMANDA
-              </div>
-
-              <h2>
-                Precisa resolver algo específico?
-                <span> Conheça a Ajudon Express.</span>
-              </h2>
-
-              <p>
-                Serviços pontuais para demandas empresariais, sem precisar
-                contratar uma mensalidade contábil.
-              </p>
-
-              <a className="button button-light" href="#contato" onClick={(event) => handlePageLink(event, "contato")}>
-                Consultar um serviço <Arrow />
-              </a>
-            </div>
-
-            <div className="express-list">
-              {expressServices.map((service, index) => (
-                <div className="express-item" key={service}>
-                  <span className="express-check">✓</span>
-                  <span>{service}</span>
-                  <small>{String(index + 1).padStart(2, "0")}</small>
-                </div>
-              ))}
-
-              <p className="express-footnote">
-                Consulte a equipe para confirmar disponibilidade, documentação
-                necessária e valores.
-              </p>
-            </div>
-          </div>
-        </section>
-
-        <section className="section about-section" id="sobre">
-          <div className="container about-grid">
-            <div className="about-visual">
-              <div className="about-circle circle-one" />
-              <div className="about-circle circle-two" />
-
-              <div className="about-brand-card">
-                <span className="about-brand">
-                  ajudon<span>.</span>
-                </span>
-
-                <div className="about-card-line" />
-
-                <p>
-                  Conhecimento contábil.
-                  <br />
-                  Tecnologia. Pessoas.
-                </p>
-
-                <span className="about-card-mark">✳</span>
-              </div>
-            </div>
-
-            <div className="about-copy">
-              <div className="eyebrow">SOBRE A AJUDON</div>
-
-              <h2>
-                Mais clareza para cuidar
-                <span> do que você está construindo.</span>
-              </h2>
-
-              <p>
-                A Ajudon combina uma plataforma digital com atendimento
-                próximo para apoiar empresas e profissionais em sua rotina.
-              </p>
-
-              <p>
-                O objetivo é tornar os processos contábeis mais claros e
-                acessíveis, para que você tenha mais tranquilidade ao cuidar
-                do seu negócio.
-              </p>
-
-              <a className="text-link" href="#contato" onClick={(event) => handlePageLink(event, "contato")}>
-                Conheça a Ajudon de perto <Arrow />
-              </a>
-            </div>
-          </div>
-        </section>
-
-        <section className="faq-section">
-          <div className="container faq-grid">
-            <div className="faq-intro">
-              <div className="eyebrow">DÚVIDAS FREQUENTES</div>
-
-              <h2>
-                Quer saber
-                <span> mais?</span>
-              </h2>
-
-              <p>
-                Reunimos algumas respostas para ajudar você a dar o próximo
-                passo.
-              </p>
-
-              <a className="text-link" href="#contato" onClick={(event) => handlePageLink(event, "contato")}>
-                Fale com a equipe <Arrow />
-              </a>
-            </div>
-
-            <div className="faq-list">
-              {faqs.map((faq) => (
-                <details className="faq-item" key={faq.question}>
-                  <summary>
-                    {faq.question}
-                    <span aria-hidden="true">+</span>
-                  </summary>
-                  <p>{faq.answer}</p>
-                </details>
-              ))}
-            </div>
-          </div>
-        </section>
-      </main>
 
       <footer className="site-footer">
         <div className="container footer-main">
-          <a className="brand footer-brand" href="#inicio" onClick={(event) => handlePageLink(event, "inicio")}>
+          <a className="brand footer-brand" href="#inicio">
             ajudon<span>.</span>
           </a>
 
           <p>Contabilidade digital com atendimento próximo.</p>
 
           <div className="footer-links">
-            <a href="#solucoes" onClick={(event) => handlePageLink(event, "solucoes")}>Soluções</a>
-            <a href="#express" onClick={(event) => handlePageLink(event, "express")}>Ajudon Express</a>
-            <a href="#sobre" onClick={(event) => handlePageLink(event, "sobre")}>Sobre</a>
-            <a href="#contato" onClick={(event) => handlePageLink(event, "contato")}>Contato</a>
+            <a href="#solucoes">Soluções</a>
+            <a href="#express">Ajudon Express</a>
+            <a href="#sobre">Sobre</a>
+            <a href="#contato">Contato</a>
           </div>
         </div>
 
