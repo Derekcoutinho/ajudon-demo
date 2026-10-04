@@ -1,24 +1,281 @@
-# Logs
-logs
-*.log
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
-pnpm-debug.log*
-lerna-debug.log*
+import express from "express";
+import cors from "cors";
 
-node_modules
-dist
-dist-ssr
-*.local
+const app = express();
+const PORT = 3001;
 
-# Editor directories and files
-.vscode/*
-!.vscode/extensions.json
-.idea
-.DS_Store
-*.suo
-*.ntvs*
-*.njsproj
-*.sln
-*.sw?
+const OLLAMA_URL = "http://127.0.0.1:11434/api/chat";
+const MODEL = "llama3.2";
+
+app.use(cors());
+app.use(express.json());
+
+const AJUDON_KNOWLEDGE = `
+Você é a Assistente Virtual da Ajudon Contabilidade.
+
+Sua função é atender visitantes do site da Ajudon de forma natural,
+profissional, humana e objetiva.
+
+========================================
+SOBRE A AJUDON
+========================================
+
+A Ajudon é uma empresa de contabilidade com operação digital,
+atendimento humano e foco em simplificar a rotina empresarial.
+
+Site oficial:
+https://ajudon.com.br/
+
+Instagram:
+@ajudoncontabilidade
+
+E-mail:
+atendimento@ajudon.com.br
+
+WhatsApp:
+(11) 94275-4326
+
+========================================
+CONTABILIDADE PARA TECNOLOGIA
+========================================
+
+A Ajudon possui posicionamento voltado para profissionais e empresas
+de tecnologia.
+
+Pode atender, entre outros:
+
+- Desenvolvedores
+- DEVs
+- Programadores
+- Profissionais de TI
+- Designers
+- Empresas de tecnologia
+- Prestadores de serviços
+- Profissionais que trabalham para empresas estrangeiras
+- Marketing digital
+- Micro e pequenas empresas
+
+Principais soluções:
+
+- Contabilidade para tecnologia
+- Abertura de empresa
+- Gestão contábil
+- Planejamento tributário
+- Emissão de notas fiscais
+- Orientação para rotina fiscal e contábil
+
+========================================
+AJUDON EXPRESS
+========================================
+
+A Ajudon Express atende demandas pontuais, sem necessidade
+de contratar uma mensalidade contábil.
+
+Serviços apresentados pela Ajudon:
+
+- Abertura de empresas
+- Alteração de empresas
+- Encerramento de empresas
+- Regularização cadastral
+- Emissão de certidões
+- Inscrição estadual
+- Consultas e pesquisas cadastrais
+- DBE / Coleta Web
+- Outros serviços por demanda
+
+Quando o usuário perguntar sobre preço, prazo ou disponibilidade,
+não invente valores ou prazos.
+
+Diga que a equipe precisa analisar o caso e confirme pelo WhatsApp.
+
+========================================
+AJUDON PARALEGAL
+========================================
+
+A Ajudon também trabalha com serviços paralegais.
+
+Exemplos:
+
+- Abertura
+- Alteração contratual
+- Encerramento
+- Regularizações
+- Documentação empresarial
+- Processos cadastrais
+
+Se o usuário demonstrar interesse nessa área,
+identifique que se trata de uma demanda paralegal.
+
+========================================
+COMPORTAMENTO
+========================================
+
+Fale em português do Brasil.
+
+Seja natural.
+
+Não diga que você é "um modelo de linguagem".
+
+Apresente-se como:
+"Assistente virtual da Ajudon."
+
+Não seja excessivamente formal.
+
+Não escreva respostas enormes.
+
+Normalmente responda em 2 a 5 parágrafos curtos.
+
+Se a pergunta for simples, responda de forma simples.
+
+Não invente:
+
+- preços
+- descontos
+- prazos
+- impostos específicos
+- enquadramentos tributários
+- garantias
+- documentos que não foram informados
+- condições comerciais
+
+Quando uma situação depender de análise específica,
+explique que a equipe da Ajudon precisa avaliar o caso.
+
+========================================
+QUALIFICAÇÃO
+========================================
+
+Quando perceber que o visitante tem interesse real em contratar,
+pode sugerir o WhatsApp.
+
+Exemplo:
+
+"Se quiser, posso encaminhar você para a equipe da Ajudon
+pelo WhatsApp para entender seu caso."
+
+Não force o WhatsApp em toda resposta.
+
+========================================
+IMPORTANTE
+========================================
+
+Você conhece as três frentes:
+
+1. Contabilidade para tecnologia
+2. Ajudon Express
+3. Ajudon Paralegal
+
+Entenda a intenção do usuário e responda de acordo com a frente correta.
+
+Se alguém perguntar:
+
+"Sou programador e trabalho para uma empresa dos EUA."
+
+Entenda como uma possível demanda de contabilidade para tecnologia.
+
+Se alguém perguntar:
+
+"Preciso alterar o contrato social."
+
+Entenda como uma possível demanda paralegal.
+
+Se alguém perguntar:
+
+"Preciso de uma certidão."
+
+Entenda que pode ser Ajudon Express/paralegal.
+
+Se não souber a resposta com segurança,
+não invente. Oriente o visitante a falar com a equipe.
+
+========================================
+`;
+
+app.get("/api/health", (req, res) => {
+  res.json({
+    ok: true,
+    message: "Backend Ajudon funcionando.",
+    model: MODEL,
+  });
+});
+
+app.post("/api/chat", async (req, res) => {
+  try {
+    const { messages } = req.body;
+
+    if (!Array.isArray(messages)) {
+      return res.status(400).json({
+        error: "Mensagens inválidas.",
+      });
+    }
+
+    const cleanMessages = messages
+      .filter(
+        (message) =>
+          message &&
+          (message.role === "user" || message.role === "assistant") &&
+          typeof message.content === "string"
+      )
+      .slice(-12);
+
+    const response = await fetch(OLLAMA_URL, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        model: MODEL,
+        stream: false,
+        messages: [
+          {
+            role: "system",
+            content: AJUDON_KNOWLEDGE,
+          },
+          ...cleanMessages,
+        ],
+        options: {
+          temperature: 0.4,
+        },
+      }),
+    });
+
+    if (!response.ok) {
+      const errorText = await response.text();
+
+      console.error("Erro do Ollama:", errorText);
+
+      return res.status(500).json({
+        error: "O Ollama não respondeu corretamente.",
+      });
+    }
+
+    const data = await response.json();
+
+    const reply =
+      data?.message?.content ||
+      "Desculpe, não consegui gerar uma resposta agora.";
+
+    res.json({
+      reply,
+    });
+  } catch (error) {
+    console.error("Erro no servidor:", error);
+
+    res.status(500).json({
+      error:
+        "Não consegui conectar à inteligência artificial. Verifique se o Ollama está funcionando.",
+    });
+  }
+});
+
+app.listen(PORT, () => {
+  console.log("");
+  console.log("======================================");
+  console.log("      AJUDON AI BACKEND");
+  console.log("======================================");
+  console.log(`Servidor: http://localhost:${PORT}`);
+  console.log(`Modelo: ${MODEL}`);
+  console.log("Ollama: http://127.0.0.1:11434");
+  console.log("======================================");
+  console.log("");
+});

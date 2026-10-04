@@ -94,103 +94,226 @@ function Arrow() {
     </span>
   );
 }
-
 function FlyingBot() {
   const [isOpen, setIsOpen] = useState(false);
+
   const [messages, setMessages] = useState([
     {
       from: "bot",
-      text: "Olá! Sou o assistente virtual da Ajudon. Posso ajudar você a encontrar uma solução ou encaminhar seu atendimento.",
+      text:
+        "Olá! Sou a Assistente Virtual da Ajudon. Posso ajudar com contabilidade para tecnologia, Ajudon Express ou serviços paralegais.",
     },
   ]);
 
+  const [loading, setLoading] = useState(false);
+
   const suggestions = [
     "Quero abrir uma empresa",
-    "Contabilidade para tecnologia",
-    "Conhecer a Ajudon Express",
-    "Falar com a equipe",
+    "Sou profissional de tecnologia",
+    "Preciso alterar meu contrato social",
+    "Quero conhecer a Ajudon Express",
   ];
 
-  function sendMessage(text) {
+  async function sendMessage(text) {
     const question = text.trim();
-    if (!question) return;
 
-    setMessages((current) => [...current, { from: "user", text: question }]);
-    const normalized = question.toLowerCase();
-    let answer = "Posso orientar você sobre os serviços da Ajudon. Se preferir, posso encaminhar sua conversa para a equipe pelo WhatsApp.";
+    if (!question || loading) return;
 
-    if (/(abrir|abertura|criar|formalizar|começar).*(empresa|negócio)|(empresa|negócio).*(abrir|abertura)/.test(normalized)) {
-      answer = "A Ajudon pode orientar sobre a abertura e formalização da empresa. Para entender seu caso e os documentos necessários, fale com a equipe pelo WhatsApp.";
-    } else if (/(tecnologia|desenvolvedor|designer|programador|ti)/.test(normalized)) {
-      answer = "A Ajudon oferece apoio contábil para profissionais e empresas de tecnologia, incluindo orientação para a rotina contábil e fiscal. Quer conversar com a equipe sobre sua atividade?";
-    } else if (/(express|pontual|certidão|certidao|regularização|regularizacao|alteração|alteracao|encerramento)/.test(normalized)) {
-      answer = "A Ajudon Express reúne serviços por demanda, como abertura, alteração e encerramento de empresas, regularização cadastral e emissão de certidões. A equipe confirma disponibilidade, documentos e valores.";
-    } else if (/(preço|preco|valor|quanto custa|orçamento|orcamento)/.test(normalized)) {
-      answer = "Os valores dependem do serviço e da necessidade da empresa. Posso encaminhar você ao WhatsApp para consultar a equipe.";
-    } else if (/(e-mail|email|equipe|humano|atendente|whatsapp|falar|contato)/.test(normalized)) {
-      answer = "Claro! Use o botão abaixo para continuar seu atendimento com a equipe da Ajudon pelo WhatsApp.";
-    } else if (/(serviço|servicos|soluções|solucoes|contabilidade|tributário|tributario|nota fiscal)/.test(normalized)) {
-      answer = "A Ajudon oferece contabilidade para tecnologia, abertura de empresa, gestão contábil, planejamento tributário, emissão de notas fiscais e serviços Ajudon Express. Qual deles você quer conhecer?";
+    const userMessage = {
+      from: "user",
+      text: question,
+    };
+
+    setMessages((current) => [...current, userMessage]);
+    setLoading(true);
+
+    try {
+      const history = [
+        ...messages.map((message) => ({
+          role: message.from === "user" ? "user" : "assistant",
+          content: message.text,
+        })),
+        {
+          role: "user",
+          content: question,
+        },
+      ];
+
+      const response = await fetch("http://localhost:3001/api/chat", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          messages: history,
+        }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.error || "Erro ao consultar a IA.");
+      }
+
+      setMessages((current) => [
+        ...current,
+        {
+          from: "bot",
+          text: data.reply,
+        },
+      ]);
+    } catch (error) {
+      console.error("Erro no assistente:", error);
+
+      setMessages((current) => [
+        ...current,
+        {
+          from: "bot",
+          text:
+            "Tive um problema para me conectar agora. Verifique se o assistente da Ajudon está ativo ou continue seu atendimento pelo WhatsApp.",
+        },
+      ]);
+    } finally {
+      setLoading(false);
     }
-
-    window.setTimeout(() => {
-      setMessages((current) => [...current, { from: "bot", text: answer }]);
-    }, 250);
   }
 
   function openWhatsApp() {
-    const message = "Olá! Estou no site da Ajudon e gostaria de continuar meu atendimento com a equipe.";
-    window.open(`${whatsappUrl}?text=${encodeURIComponent(message)}`, "_blank", "noopener,noreferrer");
+    const message =
+      "Olá! Estou no site da Ajudon e gostaria de continuar meu atendimento com a equipe.";
+
+    window.open(
+      `${whatsappUrl}?text=${encodeURIComponent(message)}`,
+      "_blank",
+      "noopener,noreferrer"
+    );
   }
 
   function handleSubmit(event) {
     event.preventDefault();
+
     const input = event.currentTarget.elements.message;
-    sendMessage(input.value);
+    const value = input.value;
+
+    if (!value.trim()) return;
+
     input.value = "";
+    sendMessage(value);
   }
 
   return (
     <div className="ajudon-assistant">
       {isOpen && (
-        <section className="assistant-panel" aria-label="Assistente virtual da Ajudon">
+        <section
+          className="assistant-panel"
+          aria-label="Assistente virtual da Ajudon"
+        >
           <header className="assistant-header">
-            <div className="assistant-avatar" aria-hidden="true">a.</div>
+            <div className="assistant-avatar" aria-hidden="true">
+              a.
+            </div>
+
             <div className="assistant-heading">
               <strong>Assistente Ajudon</strong>
-              <span><i /> Posso ajudar você</span>
+              <span>
+                <i /> {loading ? "Pensando..." : "Online"}
+              </span>
             </div>
-            <button className="assistant-close" type="button" onClick={() => setIsOpen(false)} aria-label="Fechar assistente">×</button>
+
+            <button
+              className="assistant-close"
+              type="button"
+              onClick={() => setIsOpen(false)}
+              aria-label="Fechar assistente"
+            >
+              ×
+            </button>
           </header>
+
           <div className="assistant-messages" aria-live="polite">
             {messages.map((message, index) => (
-              <div className={`assistant-message ${message.from}`} key={`${index}-${message.from}`}>
+              <div
+                className={`assistant-message ${message.from}`}
+                key={`${index}-${message.from}`}
+              >
                 {message.text}
               </div>
             ))}
-            <div className="assistant-actions">
-              {suggestions.map((suggestion) => (
-                <button type="button" key={suggestion} onClick={() => sendMessage(suggestion)}>{suggestion}</button>
-              ))}
-            </div>
+
+            {loading && (
+              <div className="assistant-message bot assistant-loading">
+                <span />
+                <span />
+                <span />
+              </div>
+            )}
+
+            {!loading && messages.length === 1 && (
+              <div className="assistant-actions">
+                {suggestions.map((suggestion) => (
+                  <button
+                    type="button"
+                    key={suggestion}
+                    onClick={() => sendMessage(suggestion)}
+                  >
+                    {suggestion}
+                  </button>
+                ))}
+              </div>
+            )}
           </div>
+
           <form className="assistant-compose" onSubmit={handleSubmit}>
-            <input name="message" aria-label="Digite sua dúvida" placeholder="Digite sua dúvida..." autoComplete="off" />
-            <button type="submit" aria-label="Enviar mensagem">↑</button>
+            <input
+              name="message"
+              aria-label="Digite sua dúvida"
+              placeholder={
+                loading
+                  ? "A Ajudon está pensando..."
+                  : "Digite sua dúvida..."
+              }
+              autoComplete="off"
+              disabled={loading}
+            />
+
+            <button
+              type="submit"
+              aria-label="Enviar mensagem"
+              disabled={loading}
+            >
+              ↑
+            </button>
           </form>
-          <button className="assistant-whatsapp" type="button" onClick={openWhatsApp}>Continuar no WhatsApp <Arrow /></button>
+
+          <button
+            className="assistant-whatsapp"
+            type="button"
+            onClick={openWhatsApp}
+          >
+            Continuar no WhatsApp <Arrow />
+          </button>
         </section>
       )}
+
       <button
         type="button"
         className={`flying-bot ${isOpen ? "is-open" : ""}`}
         onClick={() => setIsOpen((open) => !open)}
-        aria-label={isOpen ? "Fechar assistente Ajudon" : "Abrir assistente Ajudon"}
+        aria-label={
+          isOpen
+            ? "Fechar assistente Ajudon"
+            : "Abrir assistente Ajudon"
+        }
         aria-expanded={isOpen}
         title="Posso ajudar?"
       >
         <img src="/bot-ajudon.png" alt="" />
-        {!isOpen && <span className="bot-message">Posso ajudar?</span>}
+
+        {!isOpen && (
+          <span className="bot-message">
+            Posso ajudar?
+          </span>
+        )}
       </button>
     </div>
   );
@@ -198,6 +321,7 @@ function FlyingBot() {
 
 function App() {
   const [menuOpen, setMenuOpen] = useState(false);
+  const [welcomeOpen, setWelcomeOpen] = useState(true);
   const [form, setForm] = useState({
     name: "",
     email: "",
@@ -269,6 +393,275 @@ function App() {
 
   return (
     <>
+      {welcomeOpen && (
+        <div className="welcome-overlay" role="dialog" aria-modal="true" aria-label="Mensagem de boas-vindas">
+          <div className="welcome-modal">
+            <button
+              className="welcome-close"
+              type="button"
+              onClick={() => setWelcomeOpen(false)}
+              aria-label="Fechar mensagem"
+            >
+              ×
+            </button>
+
+            <span className="welcome-eyebrow">
+              <i /> AJUDON
+            </span>
+
+            <h2>
+              Olá! <span>👋</span>
+            </h2>
+
+            <p>
+              Bem-vindo à Ajudon. Como podemos ajudar sua empresa hoje?
+            </p>
+
+            <div className="welcome-actions">
+              <button
+                type="button"
+                className="welcome-primary"
+                onClick={() => {
+                  setWelcomeOpen(false);
+                  handleContactClick();
+                }}
+              >
+                Falar com a Ajudon <Arrow />
+              </button>
+
+              <button
+                type="button"
+                className="welcome-secondary"
+                onClick={() => setWelcomeOpen(false)}
+              >
+                Agora não
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      <style>{`
+        /* =========================
+           BOAS-VINDAS
+        ========================= */
+        .welcome-overlay {
+          position: fixed;
+          inset: 0;
+          z-index: 5000;
+          display: grid;
+          place-items: center;
+          padding: 24px;
+          background: rgba(2, 9, 17, 0.74);
+          backdrop-filter: blur(10px);
+          -webkit-backdrop-filter: blur(10px);
+          animation: welcomeOverlayIn 220ms ease forwards;
+        }
+
+        .welcome-modal {
+          position: relative;
+          width: min(100%, 430px);
+          padding: 38px;
+          border: 1px solid rgba(72, 217, 244, 0.22);
+          border-radius: 22px;
+          background:
+            radial-gradient(circle at 100% 0%, rgba(72, 217, 244, 0.10), transparent 38%),
+            #07111f;
+          box-shadow:
+            0 30px 100px rgba(0, 0, 0, 0.55),
+            0 0 50px rgba(72, 217, 244, 0.08);
+          color: #fff;
+          animation: welcomeModalIn 350ms cubic-bezier(.2,.8,.2,1);
+        }
+
+        .welcome-close {
+          position: absolute;
+          top: 14px;
+          right: 16px;
+          width: 34px;
+          height: 34px;
+          border: 1px solid rgba(255,255,255,.12);
+          border-radius: 50%;
+          background: rgba(255,255,255,.04);
+          color: #fff;
+          font-size: 22px;
+          line-height: 1;
+          cursor: pointer;
+          transition: .2s ease;
+        }
+
+        .welcome-close:hover {
+          background: rgba(255,255,255,.09);
+          transform: rotate(90deg);
+        }
+
+        .welcome-eyebrow {
+          display: flex;
+          align-items: center;
+          gap: 9px;
+          margin-bottom: 18px;
+          color: #48d9f4;
+          font-family: "DM Mono", monospace;
+          font-size: 11px;
+          letter-spacing: .14em;
+        }
+
+        .welcome-eyebrow i {
+          width: 7px;
+          height: 7px;
+          border-radius: 50%;
+          background: #48d9f4;
+          box-shadow: 0 0 14px #48d9f4;
+        }
+
+        .welcome-modal h2 {
+          margin: 0 0 12px;
+          font-size: clamp(34px, 6vw, 46px);
+          line-height: .95;
+          letter-spacing: -.05em;
+        }
+
+        .welcome-modal h2 span {
+          font-size: .75em;
+        }
+
+        .welcome-modal p {
+          max-width: 340px;
+          margin: 0 0 28px;
+          color: #91a6bb;
+          font-size: 15px;
+          line-height: 1.65;
+        }
+
+        .welcome-actions {
+          display: flex;
+          flex-direction: column;
+          gap: 10px;
+        }
+
+        .welcome-primary {
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          gap: 8px;
+          width: 100%;
+          min-height: 50px;
+          border: 0;
+          border-radius: 12px;
+          background: #48d9f4;
+          color: #04101b;
+          font-weight: 800;
+          cursor: pointer;
+          transition: transform .2s ease, box-shadow .2s ease;
+        }
+
+        .welcome-primary:hover {
+          transform: translateY(-2px);
+          box-shadow: 0 10px 30px rgba(72, 217, 244, .22);
+        }
+
+        .welcome-primary .arrow {
+          display: inline-flex;
+        }
+
+        .welcome-secondary {
+          min-height: 44px;
+          border: 0;
+          background: transparent;
+          color: #7f94aa;
+          cursor: pointer;
+          transition: color .2s ease;
+        }
+
+        .welcome-secondary:hover {
+          color: #fff;
+        }
+
+        @keyframes welcomeOverlayIn {
+          from { opacity: 0; }
+          to { opacity: 1; }
+        }
+
+        @keyframes welcomeModalIn {
+          from {
+            opacity: 0;
+            transform: translateY(18px) scale(.97);
+          }
+          to {
+            opacity: 1;
+            transform: translateY(0) scale(1);
+          }
+        }
+
+        /* =========================
+           LETREIRO INFINITO
+        ========================= */
+        .trust-strip {
+          width: 100%;
+          overflow: hidden;
+        }
+
+        .ticker-track {
+          display: flex;
+          width: max-content;
+          will-change: transform;
+          animation: ajudonTicker 30s linear infinite;
+        }
+
+        .ticker-group {
+          display: flex;
+          flex: 0 0 auto;
+          align-items: center;
+          gap: 30px;
+          padding-right: 30px;
+          white-space: nowrap;
+        }
+
+        .ticker-group span {
+          white-space: nowrap;
+        }
+
+        .ticker-group i {
+          flex: 0 0 auto;
+        }
+
+        @keyframes ajudonTicker {
+          from {
+            transform: translate3d(0, 0, 0);
+          }
+          to {
+            transform: translate3d(-50%, 0, 0);
+          }
+        }
+
+        @media (max-width: 600px) {
+          .welcome-modal {
+            padding: 32px 24px 26px;
+            border-radius: 18px;
+          }
+
+          .ticker-group {
+            gap: 20px;
+            padding-right: 20px;
+          }
+
+          .ticker-track {
+            animation-duration: 24s;
+          }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+          .welcome-overlay,
+          .welcome-modal {
+            animation: none;
+          }
+
+          .ticker-track {
+            animation-duration: 90s;
+          }
+        }
+      `}</style>
+
       <header className="site-header">
         <nav className="nav container" aria-label="Navegação principal">
           <a className="brand" href="#inicio" onClick={closeMenu}>
@@ -751,7 +1144,7 @@ function App() {
             <a href="#sobre">Sobre</a>
             <a href="#contato">Contato</a>
           </div>
-        </div>
+        </div>s
 
         <div className="container footer-contact">
           <button
