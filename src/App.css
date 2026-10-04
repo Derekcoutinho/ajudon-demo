@@ -2199,3 +2199,13 @@ svg {
   opacity: .4;
   cursor: wait;
 }
+.instagram-icon {
+  color: #E4405F;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.instagram-icon:hover {
+  color: #ff6b81;
+}

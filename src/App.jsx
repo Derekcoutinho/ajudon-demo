@@ -94,6 +94,38 @@ function Arrow() {
     </span>
   );
 }
+
+function InstagramIcon() {
+  return (
+    <svg
+      viewBox="0 0 24 24"
+      width="22"
+      height="22"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+      aria-hidden="true"
+    >
+      <rect
+        x="3"
+        y="3"
+        width="18"
+        height="18"
+        rx="5"
+        stroke="currentColor"
+        strokeWidth="2"
+      />
+      <circle
+        cx="12"
+        cy="12"
+        r="4"
+        stroke="currentColor"
+        strokeWidth="2"
+      />
+      <circle cx="17.5" cy="6.5" r="1.2" fill="currentColor" />
+    </svg>
+  );
+}
+
 function FlyingBot() {
   const [isOpen, setIsOpen] = useState(false);
 
@@ -215,6 +247,7 @@ function FlyingBot() {
 
             <div className="assistant-heading">
               <strong>Assistente Ajudon</strong>
+
               <span>
                 <i /> {loading ? "Pensando..." : "Online"}
               </span>
@@ -309,11 +342,7 @@ function FlyingBot() {
       >
         <img src="/bot-ajudon.png" alt="" />
 
-        {!isOpen && (
-          <span className="bot-message">
-            Posso ajudar?
-          </span>
-        )}
+        {!isOpen && <span className="bot-message">Posso ajudar?</span>}
       </button>
     </div>
   );
@@ -322,6 +351,7 @@ function FlyingBot() {
 function App() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [welcomeOpen, setWelcomeOpen] = useState(true);
+
   const [form, setForm] = useState({
     name: "",
     email: "",
@@ -345,6 +375,7 @@ function App() {
 
   function openWhatsApp(message) {
     const url = `${whatsappUrl}?text=${encodeURIComponent(message)}`;
+
     window.open(url, "_blank", "noopener,noreferrer");
   }
 
@@ -371,7 +402,8 @@ function App() {
   async function shareSite() {
     const shareData = {
       title: "Ajudon | Contabilidade digital",
-      text: "Conheça a Ajudon: contabilidade digital e serviços para sua empresa.",
+      text:
+        "Conheça a Ajudon: contabilidade digital e serviços para sua empresa.",
       url: siteUrl,
     };
 
@@ -394,7 +426,12 @@ function App() {
   return (
     <>
       {welcomeOpen && (
-        <div className="welcome-overlay" role="dialog" aria-modal="true" aria-label="Mensagem de boas-vindas">
+        <div
+          className="welcome-overlay"
+          role="dialog"
+          aria-modal="true"
+          aria-label="Mensagem de boas-vindas"
+        >
           <div className="welcome-modal">
             <button
               className="welcome-close"
@@ -442,9 +479,6 @@ function App() {
       )}
 
       <style>{`
-        /* =========================
-           BOAS-VINDAS
-        ========================= */
         .welcome-overlay {
           position: fixed;
           inset: 0;
@@ -465,7 +499,11 @@ function App() {
           border: 1px solid rgba(72, 217, 244, 0.22);
           border-radius: 22px;
           background:
-            radial-gradient(circle at 100% 0%, rgba(72, 217, 244, 0.10), transparent 38%),
+            radial-gradient(
+              circle at 100% 0%,
+              rgba(72, 217, 244, 0.10),
+              transparent 38%
+            ),
             #07111f;
           box-shadow:
             0 30px 100px rgba(0, 0, 0, 0.55),
@@ -578,8 +616,13 @@ function App() {
         }
 
         @keyframes welcomeOverlayIn {
-          from { opacity: 0; }
-          to { opacity: 1; }
+          from {
+            opacity: 0;
+          }
+
+          to {
+            opacity: 1;
+          }
         }
 
         @keyframes welcomeModalIn {
@@ -587,15 +630,13 @@ function App() {
             opacity: 0;
             transform: translateY(18px) scale(.97);
           }
+
           to {
             opacity: 1;
             transform: translateY(0) scale(1);
           }
         }
 
-        /* =========================
-           LETREIRO INFINITO
-        ========================= */
         .trust-strip {
           width: 100%;
           overflow: hidden;
@@ -629,6 +670,7 @@ function App() {
           from {
             transform: translate3d(0, 0, 0);
           }
+
           to {
             transform: translate3d(-50%, 0, 0);
           }
@@ -682,15 +724,19 @@ function App() {
             <a href="#inicio" onClick={closeMenu}>
               Início
             </a>
+
             <a href="#solucoes" onClick={closeMenu}>
               Soluções
             </a>
+
             <a href="#express" onClick={closeMenu}>
               Ajudon Express
             </a>
+
             <a href="#sobre" onClick={closeMenu}>
               Sobre
             </a>
+
             <a className="nav-contact" href="#contato" onClick={closeMenu}>
               Fale com a Ajudon <Arrow />
             </a>
@@ -699,9 +745,12 @@ function App() {
       </header>
 
       <FlyingBot />
+
       <a
         className="whatsapp-float"
-        href={`${whatsappUrl}?text=${encodeURIComponent("Olá! Vim pelo site da Ajudon e gostaria de atendimento.")}`}
+        href={`${whatsappUrl}?text=${encodeURIComponent(
+          "Olá! Vim pelo site da Ajudon e gostaria de atendimento."
+        )}`}
         target="_blank"
         rel="noreferrer"
         aria-label="Falar com a Ajudon pelo WhatsApp"
@@ -711,8 +760,6 @@ function App() {
           <path d="M16 3.2A12.6 12.6 0 0 0 5.2 22.3L3.5 28.8l6.7-1.7A12.6 12.6 0 1 0 16 3.2Zm0 22.9a10.2 10.2 0 0 1-5.2-1.4l-.4-.2-3.9 1 1-3.8-.3-.4A10.2 10.2 0 1 1 16 26.1Zm5.6-7.6c-.3-.2-1.9-.9-2.2-1s-.5-.2-.7.2-.8 1-1 1.2-.4.2-.7.1a8.3 8.3 0 0 1-2.5-1.5 9.3 9.3 0 0 1-1.7-2.1c-.2-.3 0-.5.1-.7l.5-.5.3-.5c.1-.2 0-.4 0-.6s-.7-1.8-1-2.5c-.2-.6-.5-.5-.7-.5h-.6c-.2 0-.6.1-.9.4s-1.2 1.2-1.2 2.8 1.2 3.2 1.4 3.4a13.1 13.1 0 0 0 5 4.4c.7.3 1.2.5 1.6.6.7.2 1.3.2 1.8.1.6-.1 1.9-.8 2.2-1.5s.3-1.3.2-1.5-.2-.3-.5-.4Z" />
         </svg>
       </a>
-
-
 
       <main>
         <section className="hero" id="inicio">
@@ -737,6 +784,7 @@ function App() {
                 <a className="button button-primary" href="#contato">
                   Vamos conversar <Arrow />
                 </a>
+
                 <a className="button button-secondary" href="#solucoes">
                   Conheça as soluções
                 </a>
@@ -746,6 +794,7 @@ function App() {
                 <span>
                   <b>✓</b> Suporte próximo
                 </span>
+
                 <span>
                   <b>✓</b> Soluções online
                 </span>
@@ -766,12 +815,19 @@ function App() {
                     <i />
                     <i />
                   </div>
+
                   <span>ajudon.</span>
                 </div>
 
                 <div className="window-content">
-                  <span className="art-label">MAIS TEMPO PARA VOCÊ</span>
-                  <h3 className="art-heading">Seu negócio em boas mãos.</h3>
+                  <span className="art-label">
+                    MAIS TEMPO PARA VOCÊ
+                  </span>
+
+                  <h3 className="art-heading">
+                    Seu negócio em boas mãos.
+                  </h3>
+
                   <p className="art-description">
                     Organização e orientação para você seguir em frente.
                   </p>
@@ -785,6 +841,7 @@ function App() {
 
               <div className="floating-note note-top">
                 <span className="note-symbol">↗</span>
+
                 <div>
                   <strong>Seu negócio</strong>
                   <small>em movimento</small>
@@ -793,6 +850,7 @@ function App() {
 
               <div className="floating-note note-bottom">
                 <span className="note-symbol note-green">✓</span>
+
                 <div>
                   <strong>Mais tranquilidade</strong>
                   <small>na rotina da empresa</small>
@@ -805,7 +863,10 @@ function App() {
           </div>
         </section>
 
-        <section className="trust-strip" aria-label="Diferenciais da Ajudon">
+        <section
+          className="trust-strip"
+          aria-label="Diferenciais da Ajudon"
+        >
           <div className="ticker-track">
             <div className="ticker-group">
               <span>CONTABILIDADE</span>
@@ -836,6 +897,7 @@ function App() {
             <div className="section-heading">
               <div>
                 <div className="eyebrow">COMO PODEMOS AJUDAR</div>
+
                 <h2>
                   Soluções para cada etapa
                   <span> do seu negócio.</span>
@@ -850,13 +912,22 @@ function App() {
 
             <div className="service-grid">
               {services.map((service) => (
-                <article className="service-card" key={service.number}>
+                <article
+                  className="service-card"
+                  key={service.number}
+                >
                   <div className="service-card-top">
-                    <span className="service-icon">{service.icon}</span>
-                    <span className="service-number">{service.number}</span>
+                    <span className="service-icon">
+                      {service.icon}
+                    </span>
+
+                    <span className="service-number">
+                      {service.number}
+                    </span>
                   </div>
 
                   <h3>{service.title}</h3>
+
                   <p>{service.description}</p>
 
                   <a className="text-link" href="#contato">
@@ -894,14 +965,18 @@ function App() {
               {expressServices.map((service, index) => (
                 <div className="express-item" key={service}>
                   <span className="express-check">✓</span>
+
                   <span>{service}</span>
-                  <small>{String(index + 1).padStart(2, "0")}</small>
+
+                  <small>
+                    {String(index + 1).padStart(2, "0")}
+                  </small>
                 </div>
               ))}
 
               <p className="express-footnote">
-                Consulte a equipe para confirmar disponibilidade, documentação
-                necessária e valores.
+                Consulte a equipe para confirmar disponibilidade,
+                documentação necessária e valores.
               </p>
             </div>
           </div>
@@ -983,6 +1058,7 @@ function App() {
                     {faq.question}
                     <span aria-hidden="true">+</span>
                   </summary>
+
                   <p>{faq.answer}</p>
                 </details>
               ))}
@@ -991,144 +1067,158 @@ function App() {
         </section>
       </main>
 
-        <section className="contact-section" id="contato">
-          <div className="container contact-grid">
-            <div className="contact-copy">
-              <div className="eyebrow eyebrow-light">VAMOS CONVERSAR?</div>
-
-              <h2>
-                Sua empresa tem
-                <span> novos planos?</span>
-              </h2>
-
-              <p>
-                Conte um pouco sobre o que você precisa. A equipe da Ajudon
-                poderá orientar você sobre os próximos passos.
-              </p>
-
-              <div className="contact-details">
-                <a href={`mailto:${emailAddress}`}>
-                  <span className="contact-detail-icon">✉</span>
-                  <span>
-                    <small>E-mail</small>
-                    {emailAddress}
-                  </span>
-                </a>
-
-                <a
-                  className="contact-instagram"
-                  href={instagramUrl}
-                  target="_blank"
-                  rel="noreferrer"
-                >
-                  <span className="contact-detail-icon">◎</span>
-                  <span>
-                    <small>Instagram</small>
-                    @ajudoncontabilidade
-                  </span>
-                </a>
-              </div>
-
-              <button
-                type="button"
-                className="share-site-button"
-                onClick={shareSite}
-              >
-                Compartilhar o site
-              </button>
+      <section className="contact-section" id="contato">
+        <div className="container contact-grid">
+          <div className="contact-copy">
+            <div className="eyebrow eyebrow-light">
+              VAMOS CONVERSAR?
             </div>
 
-            <form className="contact-form" onSubmit={handleSubmit}>
-              <h3>Fale com a Ajudon</h3>
-              <p>Preencha os campos para preparar sua mensagem.</p>
+            <h2>
+              Sua empresa tem
+              <span> novos planos?</span>
+            </h2>
 
-              <div className="form-row">
-                <label>
-                  Seu nome
-                  <input
-                    type="text"
-                    name="name"
-                    value={form.name}
-                    onChange={updateForm}
-                    placeholder="Como podemos te chamar?"
-                    autoComplete="name"
-                    required
-                  />
-                </label>
+            <p>
+              Conte um pouco sobre o que você precisa. A equipe da Ajudon
+              poderá orientar você sobre os próximos passos.
+            </p>
 
-                <label>
-                  Seu e-mail
-                  <input
-                    type="email"
-                    name="email"
-                    value={form.email}
-                    onChange={updateForm}
-                    placeholder="voce@empresa.com"
-                    autoComplete="email"
-                    required
-                  />
-                </label>
-              </div>
+            <div className="contact-details">
+              <a href={`mailto:${emailAddress}`}>
+                <span className="contact-detail-icon">✉</span>
 
-              <div className="form-row">
-                <label>
-                  WhatsApp <span className="optional">(opcional)</span>
-                  <input
-                    type="tel"
-                    name="phone"
-                    value={form.phone}
-                    onChange={updateForm}
-                    placeholder="(11) 99999-9999"
-                    autoComplete="tel"
-                  />
-                </label>
+                <span>
+                  <small>E-mail</small>
+                  {emailAddress}
+                </span>
+              </a>
 
-                <label>
-                  Serviço de interesse
-                  <select
-                    name="service"
-                    value={form.service}
-                    onChange={updateForm}
-                  >
-                    <option value="">Selecione uma opção</option>
-                    <option>Contabilidade para tecnologia</option>
-                    <option>Abertura de empresa</option>
-                    <option>Gestão contábil</option>
-                    <option>Planejamento tributário</option>
-                    <option>Emissão de notas fiscais</option>
-                    <option>Ajudon Express</option>
-                    <option>Outro assunto</option>
-                  </select>
-                </label>
-              </div>
+              <a
+                className="contact-instagram"
+                href={instagramUrl}
+                target="_blank"
+                rel="noreferrer"
+              >
+                <span className="contact-detail-icon instagram-icon">
+                  <InstagramIcon />
+                </span>
 
+                <span>
+                  <small>Instagram</small>
+                  @ajudoncontabilidade
+                </span>
+              </a>
+            </div>
+
+            <button
+              type="button"
+              className="share-site-button"
+              onClick={shareSite}
+            >
+              Compartilhar o site
+            </button>
+          </div>
+
+          <form className="contact-form" onSubmit={handleSubmit}>
+            <h3>Fale com a Ajudon</h3>
+
+            <p>
+              Preencha os campos para preparar sua mensagem.
+            </p>
+
+            <div className="form-row">
               <label>
-                Como podemos ajudar?
-                <textarea
-                  name="message"
-                  value={form.message}
+                Seu nome
+
+                <input
+                  type="text"
+                  name="name"
+                  value={form.name}
                   onChange={updateForm}
-                  rows="4"
-                  placeholder="Conte um pouco sobre seu negócio..."
+                  placeholder="Como podemos te chamar?"
+                  autoComplete="name"
                   required
                 />
               </label>
 
-              <button
-                className="button button-primary form-button"
-                type="submit"
-              >
-                Preparar mensagem <Arrow />
-              </button>
+              <label>
+                Seu e-mail
 
-              <small className="form-disclaimer">
-                O WhatsApp será aberto com a mensagem preenchida. Você poderá
-                revisar e confirmar o envio.
-              </small>
-            </form>
-          </div>
-        </section>
+                <input
+                  type="email"
+                  name="email"
+                  value={form.email}
+                  onChange={updateForm}
+                  placeholder="voce@empresa.com"
+                  autoComplete="email"
+                  required
+                />
+              </label>
+            </div>
 
+            <div className="form-row">
+              <label>
+                WhatsApp{" "}
+                <span className="optional">(opcional)</span>
+
+                <input
+                  type="tel"
+                  name="phone"
+                  value={form.phone}
+                  onChange={updateForm}
+                  placeholder="(11) 99999-9999"
+                  autoComplete="tel"
+                />
+              </label>
+
+              <label>
+                Serviço de interesse
+
+                <select
+                  name="service"
+                  value={form.service}
+                  onChange={updateForm}
+                >
+                  <option value="">Selecione uma opção</option>
+                  <option>Contabilidade para tecnologia</option>
+                  <option>Abertura de empresa</option>
+                  <option>Gestão contábil</option>
+                  <option>Planejamento tributário</option>
+                  <option>Emissão de notas fiscais</option>
+                  <option>Ajudon Express</option>
+                  <option>Outro assunto</option>
+                </select>
+              </label>
+            </div>
+
+            <label>
+              Como podemos ajudar?
+
+              <textarea
+                name="message"
+                value={form.message}
+                onChange={updateForm}
+                rows="4"
+                placeholder="Conte um pouco sobre seu negócio..."
+                required
+              />
+            </label>
+
+            <button
+              className="button button-primary form-button"
+              type="submit"
+            >
+              Preparar mensagem <Arrow />
+            </button>
+
+            <small className="form-disclaimer">
+              O WhatsApp será aberto com a mensagem preenchida. Você poderá
+              revisar e confirmar o envio.
+            </small>
+          </form>
+        </div>
+      </section>
 
       <footer className="site-footer">
         <div className="container footer-main">
@@ -1144,7 +1234,7 @@ function App() {
             <a href="#sobre">Sobre</a>
             <a href="#contato">Contato</a>
           </div>
-        </div>s
+        </div>
 
         <div className="container footer-contact">
           <button
@@ -1158,7 +1248,12 @@ function App() {
 
         <div className="container footer-bottom">
           <span>© {new Date().getFullYear()} Ajudon</span>
-          <a href={siteUrl} target="_blank" rel="noreferrer">
+
+          <a
+            href={siteUrl}
+            target="_blank"
+            rel="noreferrer"
+          >
             Site oficial <Arrow />
           </a>
         </div>
